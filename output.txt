@@ -1,0 +1,1022 @@
+case "Max Halos:":
+	 return MaxHalos
+case "Movement Speed Increase:":
+	 return MovementSpeedIncrease
+case "Bonus Health:":
+	 return BonusHealth
+case "Heal over Time:":
+	 return HealoverTime
+case "Movement Speed Buff/Debuff:":
+	 return MovementSpeedBuffDebuff
+case "Slam Damage:":
+	 return SlamDamage
+case "Amplified Speed:":
+	 return AmplifiedSpeed
+case "MP5 Increase:":
+	 return MP5Increase
+case "Broodlings:":
+	 return Broodlings
+case "Protection Buff:":
+	 return ProtectionBuff
+case "Protections Shred:":
+	 return ProtectionsShred
+case "Lightning Damage:":
+	 return LightningDamage
+case "Physical Protection Reduced Per Stack:":
+	 return PhysicalProtectionReducedPerStack
+case "Range:":
+	 return Range
+case "Magical Power:":
+	 return MagicalPower
+case "Move Speed:":
+	 return MoveSpeed
+case "Knockup Time:":
+	 return KnockupTime
+case "Glyphs Spawned:":
+	 return GlyphsSpawned
+case "Buff Lifetime:":
+	 return BuffLifetime
+case "Spin Damage:":
+	 return SpinDamage
+case "Madness Damage Per Hit:":
+	 return MadnessDamagePerHit
+case "Power Gain:":
+	 return PowerGain
+case "Card Lifetime:":
+	 return CardLifetime
+case "Additional Damage:":
+	 return AdditionalDamage
+case "Druid Slow:":
+	 return DruidSlow
+case "Shield:":
+	 return Shield
+case "Damage Reduction:":
+	 return DamageReduction
+case "Minion Bonus Damage:":
+	 return MinionBonusDamage
+case "Drinks per pool:":
+	 return Drinksperpool
+case "Tremble Duration:":
+	 return TrembleDuration
+case "Detonated Healing:":
+	 return DetonatedHealing
+case "Light Magical and Physical Protections:":
+	 return LightMagicalandPhysicalProtections
+case "Penetration per Stack:":
+	 return PenetrationperStack
+case "Cooldown reduction":
+	 return Cooldownreduction
+case " ":
+	 return 
+case "1st Target Duration:":
+	 return 1stTargetDuration
+case "Carry Duration:":
+	 return CarryDuration
+case "Damage Buff:":
+	 return DamageBuff
+case "Wound Duration:":
+	 return WoundDuration
+case "Burst Damage:":
+	 return BurstDamage
+case "Mink Attack Speed:":
+	 return MinkAttackSpeed
+case "Power:":
+	 return Power
+case "Energy Gain:":
+	 return EnergyGain
+case "Basic Attack Damage:":
+	 return BasicAttackDamage
+case "Max Rank Debuff:":
+	 return MaxRankDebuff
+case "Mark Lifetime:":
+	 return MarkLifetime
+case "Protections:":
+	 return Protections
+case "Damage Per Tick:":
+	 return DamagePerTick
+case "Power Debuff:":
+	 return PowerDebuff
+case "Power Loss:":
+	 return PowerLoss
+case "Move Speed (Axe):":
+	 return MoveSpeedAxe
+case "Physical Power Bonus:":
+	 return PhysicalPowerBonus
+case "Druid Damage Per Hit:":
+	 return DruidDamagePerHit
+case "Mark Duration:":
+	 return MarkDuration
+case "Self Heal:":
+	 return SelfHeal
+case "Heart Lifetime:":
+	 return HeartLifetime
+case "Dragon Breath Damage:":
+	 return DragonBreathDamage
+case "Magical Scaling:":
+	 return MagicalScaling
+case "Bonus Physical Power:":
+	 return BonusPhysicalPower
+case "Heal per God:":
+	 return HealperGod
+case "Winter Chill:":
+	 return WinterChill
+case "Fist Damage:":
+	 return FistDamage
+case "Mesmerize:":
+	 return Mesmerize
+case "Jealousy Damage Increase:":
+	 return JealousyDamageIncrease
+case "Cat Protections:":
+	 return CatProtections
+case "Shield Duration:":
+	 return ShieldDuration
+case "Movement Speed per stack:":
+	 return MovementSpeedperstack
+case "Bonus Speed (Low Health):":
+	 return BonusSpeedLowHealth
+case "Jealousy Duration:":
+	 return JealousyDuration
+case "Boosted CC:":
+	 return BoostedCC
+case "Mesmerize Duration:":
+	 return MesmerizeDuration
+case "Rank 1:":
+	 return Rank1
+case "Smashed:":
+	 return Smashed
+case "Frostbite Damage Bonus:":
+	 return FrostbiteDamageBonus
+case "Tidal Meter:":
+	 return TidalMeter
+case "Lifetime:":
+	 return Lifetime
+case "Magical Power Per Stack:":
+	 return MagicalPowerPerStack
+case "Heal on Kill:":
+	 return HealonKill
+case "Pull Duration:":
+	 return PullDuration
+case "Damage Reflect:":
+	 return DamageReflect
+case "Detonate Lifetime:":
+	 return DetonateLifetime
+case "Movement Speed Bonus:":
+	 return MovementSpeedBonus
+case "Healing:":
+	 return Healing
+case "Berserk Threshold:":
+	 return BerserkThreshold
+case "Pull Damage per Tick:":
+	 return PullDamageperTick
+case "Physical Damage:":
+	 return PhysicalDamage
+case "Dash Damage:":
+	 return DashDamage
+case "Healing Debuff:":
+	 return HealingDebuff
+case "Hits to destroy:":
+	 return Hitstodestroy
+case "Damage within 55:":
+	 return Damagewithin55
+case "Physical Power (Bow):":
+	 return PhysicalPowerBow
+case "Attack Speed per Stack:":
+	 return AttackSpeedperStack
+case "Initial Heal:":
+	 return InitialHeal
+case "Emerge/Crash Damage:":
+	 return EmergeCrashDamage
+case "Outer Damage:":
+	 return OuterDamage
+case "Tiger Damage:":
+	 return TigerDamage
+case "Argus Heal:":
+	 return ArgusHeal
+case "Additional Poisoned Damage:":
+	 return AdditionalPoisonedDamage
+case "Slow:":
+	 return Slow
+case "Max Auras Possible:":
+	 return MaxAurasPossible
+case "Strafe Penalty:":
+	 return StrafePenalty
+case "Healing Debuff Duration:":
+	 return HealingDebuffDuration
+case "Soul Health:":
+	 return SoulHealth
+case "Fumes Duration:":
+	 return FumesDuration
+case "Berserk Duration:":
+	 return BerserkDuration
+case "Argus Second Hit:":
+	 return ArgusSecondHit
+case "Charges:":
+	 return Charges
+case "Spawn Damage:":
+	 return SpawnDamage
+case "Buff Duration:":
+	 return BuffDuration
+case "Uppercut Damage:":
+	 return UppercutDamage
+case "Penetration:":
+	 return Penetration
+case "Slow: ":
+	 return Slow
+case "Fissure Lifetime:":
+	 return FissureLifetime
+case "Heal:":
+	 return Heal
+case "Missing Health Heal:":
+	 return MissingHealthHeal
+case "Speed Buff:":
+	 return SpeedBuff
+case "Attack Speed Conversion:":
+	 return AttackSpeedConversion
+case "3 Poisons:":
+	 return 3Poisons
+case "Heal Per Tick:":
+	 return HealPerTick
+case "Argus Aura Damage:":
+	 return ArgusAuraDamage
+case "Slow duration:":
+	 return Slowduration
+case "Damage (applied twice):":
+	 return Damageappliedtwice
+case "Critical Strike Chance:":
+	 return CriticalStrikeChance
+case "Protections Reduced:":
+	 return ProtectionsReduced
+case "Autumn Decay:":
+	 return AutumnDecay
+case "Detonate Damage:":
+	 return DetonateDamage
+case "Gust Slow:":
+	 return GustSlow
+case "Attack speed conversion:":
+	 return Attackspeedconversion
+case "Final Damage:":
+	 return FinalDamage
+case "Speed Slow Duration:":
+	 return SpeedSlowDuration
+case "Poison Damage:":
+	 return PoisonDamage
+case "Bear Self Buff:":
+	 return BearSelfBuff
+case "MP5:":
+	 return MP5
+case "Light Damage:":
+	 return LightDamage
+case "Speed:":
+	 return Speed
+case "Stealth Duration:":
+	 return StealthDuration
+case "Max Charge:":
+	 return MaxCharge
+case "Phase Slow:":
+	 return PhaseSlow
+case "Drop chance for Arrow Pickup:":
+	 return DropchanceforArrowPickup
+case "Duration:":
+	 return Duration
+case "Druid Area Duration:":
+	 return DruidAreaDuration
+case "Slow Debuff:":
+	 return SlowDebuff
+case "Argus Lifetime:":
+	 return ArgusLifetime
+case "Cleave Damage:":
+	 return CleaveDamage
+case "2 Poisons:":
+	 return 2Poisons
+case "Protections Bonus:":
+	 return ProtectionsBonus
+case "Bleed Damage:":
+	 return BleedDamage
+case "Tornado Lifetime:":
+	 return TornadoLifetime
+case "Heal per passive stack:":
+	 return Healperpassivestack
+case "Rank 3:":
+	 return Rank3
+case "Cooldown Reduction:":
+	 return CooldownReduction
+case "Slow Duration":
+	 return SlowDuration
+case "Boosted Slow:":
+	 return BoostedSlow
+case "Attack Damage:":
+	 return AttackDamage
+case "Attack Speed Reduction:":
+	 return AttackSpeedReduction
+case "Root Duration":
+	 return RootDuration
+case "Invulnerability Duration:":
+	 return InvulnerabilityDuration
+case "Attack Speed Buff:":
+	 return AttackSpeedBuff
+case "Cavalry Charge Boost:":
+	 return CavalryChargeBoost
+case "Boosted Protections Stolen:":
+	 return BoostedProtectionsStolen
+case "Num Hits to Full Charge:":
+	 return NumHitstoFullCharge
+case "Damage Per Blade:":
+	 return DamagePerBlade
+case "Initial Damage:":
+	 return InitialDamage
+case "Power Reduction:":
+	 return PowerReduction
+case "Echo Buff:":
+	 return EchoBuff
+case "Shot Damage:":
+	 return ShotDamage
+case "Shield Health:":
+	 return ShieldHealth
+case "Kappa Damage per Hit:":
+	 return KappaDamageperHit
+case "Return Damage:":
+	 return ReturnDamage
+case "Kill HP Threshold:":
+	 return KillHPThreshold
+case "Colossal Duration:":
+	 return ColossalDuration
+case "Arcs:":
+	 return Arcs
+case "Sickle Slow Increase:":
+	 return SickleSlowIncrease
+case "Max Shackles:":
+	 return MaxShackles
+case "MP5 Per Stack":
+	 return MP5PerStack
+case "Slam Damage Increase:":
+	 return SlamDamageIncrease
+case "Increased damage taken:":
+	 return Increaseddamagetaken
+case "Max HP Damage:":
+	 return MaxHPDamage
+case "Dark Slow:":
+	 return DarkSlow
+case "Increased Healing per Stack:":
+	 return IncreasedHealingperStack
+case "Minor Damage:":
+	 return MinorDamage
+case "Movement Speed Buff:":
+	 return MovementSpeedBuff
+case "Mink Damage:":
+	 return MinkDamage
+case "Dark Protections Debuff:":
+	 return DarkProtectionsDebuff
+case "Taunt Duration:":
+	 return TauntDuration
+case "Silence:":
+	 return Silence
+case "Light Duration:":
+	 return LightDuration
+case "Bear Stun Duration:":
+	 return BearStunDuration
+case "Hysteria Per Hit:":
+	 return HysteriaPerHit
+case "Flag Duration:":
+	 return FlagDuration
+case "Magical Damage Mitigation:":
+	 return MagicalDamageMitigation
+case "Buff per Stack:":
+	 return BuffperStack
+case "Attack Speed:":
+	 return AttackSpeed
+case "Summer Heat:":
+	 return SummerHeat
+case "Damage Increase per Charge:":
+	 return DamageIncreaseperCharge
+case "Protections per Stack:":
+	 return ProtectionsperStack
+case "Kappa Health:":
+	 return KappaHealth
+case "Dash Magical Protection Reduction Per Stack:":
+	 return DashMagicalProtectionReductionPerStack
+case "Heat:":
+	 return Heat
+case "Health Bonus:":
+	 return HealthBonus
+case "Shadow Clone Speed:":
+	 return ShadowCloneSpeed
+case "Passive Duration:":
+	 return PassiveDuration
+case "Damage per tick:":
+	 return Damagepertick
+case "Slow Percentage:":
+	 return SlowPercentage
+case "Minion Stun:":
+	 return MinionStun
+case "Fear Duration per Hit:":
+	 return FearDurationperHit
+case "HP Restore (Gods):":
+	 return HPRestoreGods
+case "Boar Lifetime:":
+	 return BoarLifetime
+case "Chain Slow:":
+	 return ChainSlow
+case "Damage Returned as Healing:":
+	 return DamageReturnedasHealing
+case "Valor Aura:":
+	 return ValorAura
+case "Dark Damage:":
+	 return DarkDamage
+case "Empowered Buff:":
+	 return EmpoweredBuff
+case "Inner Damage:":
+	 return InnerDamage
+case "Monolith Duration:":
+	 return MonolithDuration
+case "Essence Drinker Buff:":
+	 return EssenceDrinkerBuff
+case "Physical Power Buff:":
+	 return PhysicalPowerBuff
+case "Goal #3:":
+	 return Goal3
+case "Minion Explode:":
+	 return MinionExplode
+case "Bonus Move Speed:":
+	 return BonusMoveSpeed
+case "Silence Duration:":
+	 return SilenceDuration
+case "Physical Protection:":
+	 return PhysicalProtection
+case "Magical Power Buff:":
+	 return MagicalPowerBuff
+case "Bonus Protections:":
+	 return BonusProtections
+case "Stealth Movement Speed:":
+	 return StealthMovementSpeed
+case "Max Stacks:":
+	 return MaxStacks
+case "Healing per Tick:":
+	 return HealingperTick
+case "Crit Chance:":
+	 return CritChance
+case "Thunder Damage:":
+	 return ThunderDamage
+case "Slow %:":
+	 return Slow%
+case "Axe Damage:":
+	 return AxeDamage
+case "Heal per Minion:":
+	 return HealperMinion
+case "Boosted Healing:":
+	 return BoostedHealing
+case "Gust Damage:":
+	 return GustDamage
+case "Max Charge Dmg/Heal Scale:":
+	 return MaxChargeDmgHealScale
+case "Initial Fuel Cost:":
+	 return InitialFuelCost
+case "Damage Per Strike:":
+	 return DamagePerStrike
+case "Heal Per Hit:":
+	 return HealPerHit
+case "DoT Damage:":
+	 return DoTDamage
+case "Movement Speed:":
+	 return MovementSpeed
+case "Cripple Duration:":
+	 return CrippleDuration
+case "Goal #2:":
+	 return Goal2
+case "Attack Speed Debuff:":
+	 return AttackSpeedDebuff
+case "Execute Threshold:":
+	 return ExecuteThreshold
+case "Spring Growth:":
+	 return SpringGrowth
+case "Damage per Shot:":
+	 return DamageperShot
+case "Dragon Damage Per Tick:":
+	 return DragonDamagePerTick
+case "Physical Power per Stack":
+	 return PhysicalPowerperStack
+case "Damage per Tick:":
+	 return DamageperTick
+case "Dragon Protection Debuff:":
+	 return DragonProtectionDebuff
+case "Physical Power Increase:":
+	 return PhysicalPowerIncrease
+case "Wall Portal Range:":
+	 return WallPortalRange
+case "Submerge Mana Regen:":
+	 return SubmergeManaRegen
+case "Tiger Stun:":
+	 return TigerStun
+case "Rift Duration:":
+	 return RiftDuration
+case "Duration":
+	 return Duration
+case "Stun Duration (Axe):":
+	 return StunDurationAxe
+case "Max Penetration:":
+	 return MaxPenetration
+case "Ranged Damage:":
+	 return RangedDamage
+case "Heal per Heart:":
+	 return HealperHeart
+case "Wall Portal Duration:":
+	 return WallPortalDuration
+case "Nemesis Buff Duration:":
+	 return NemesisBuffDuration
+case "Max Damage:":
+	 return MaxDamage
+case "True Damage:":
+	 return TrueDamage
+case "Debuff Lifetime:":
+	 return DebuffLifetime
+case "Power per stack":
+	 return Powerperstack
+case "Submerge Slow:":
+	 return SubmergeSlow
+case "Damage Taken Increase:":
+	 return DamageTakenIncrease
+case "Dark Magical Power:":
+	 return DarkMagicalPower
+case "Heal per Stack:":
+	 return HealperStack
+case "Protection Shred:":
+	 return ProtectionShred
+case "High Tide Speed:":
+	 return HighTideSpeed
+case "Bonus Damage:":
+	 return BonusDamage
+case "Max Targets:":
+	 return MaxTargets
+case "Gusts Spawned:":
+	 return GustsSpawned
+case "Guard Damage:":
+	 return GuardDamage
+case "Cloud Duration:":
+	 return CloudDuration
+case "Stun (Center):":
+	 return StunCenter
+case "Duration on Web:":
+	 return DurationonWeb
+case "Druid Power Debuff:":
+	 return DruidPowerDebuff
+case "Damage (Initial/Landing):":
+	 return DamageInitialLanding
+case "Damage (Bow):":
+	 return DamageBow
+case "Argus Health:":
+	 return ArgusHealth
+case "Weave Heal:":
+	 return WeaveHeal
+case "Protections Debuff:":
+	 return ProtectionsDebuff
+case "Argus Movement Speed:":
+	 return ArgusMovementSpeed
+case "Physical Protection Conversion:":
+	 return PhysicalProtectionConversion
+case "Allied Mitigation:":
+	 return AlliedMitigation
+case "Orb Damage:":
+	 return OrbDamage
+case "Cone Damage:":
+	 return ConeDamage
+case "Bonus Energy Gain:":
+	 return BonusEnergyGain
+case "Protections Gained:":
+	 return ProtectionsGained
+case "CC Immunity Duration:":
+	 return CCImmunityDuration
+case "Mana Restored:":
+	 return ManaRestored
+case "Flying Minion Damage:":
+	 return FlyingMinionDamage
+case "Goal #1:":
+	 return Goal1
+case "Lifesteal:":
+	 return Lifesteal
+case "God Bonus Damage:":
+	 return GodBonusDamage
+case "Healing Reduction":
+	 return HealingReduction
+case "Max Stacks":
+	 return MaxStacks
+case "Speed Buff per Target Shackled:":
+	 return SpeedBuffperTargetShackled
+case "% of Damage Taken:":
+	 return %ofDamageTaken
+case "Movement Speed Slow:":
+	 return MovementSpeedSlow
+case "Assault Stance:":
+	 return AssaultStance
+case "Poison Slow:":
+	 return PoisonSlow
+case "Protection Duration:":
+	 return ProtectionDuration
+case "Conviction Boost:":
+	 return ConvictionBoost
+case "Protections Debuff Lifetime:":
+	 return ProtectionsDebuffLifetime
+case "Shatter Damage:":
+	 return ShatterDamage
+case "Bonus Damage (Gods):":
+	 return BonusDamageGods
+case "Additional Scaling:":
+	 return AdditionalScaling
+case "Attack Range:":
+	 return AttackRange
+case "Web Radius:":
+	 return WebRadius
+case "Turtle Damage:":
+	 return TurtleDamage
+case "Slash Damage:":
+	 return SlashDamage
+case "Maximum Mitigation:":
+	 return MaximumMitigation
+case "Slow per Stack:":
+	 return SlowperStack
+case "Protections Duration:":
+	 return ProtectionsDuration
+case "Disarm Duration:":
+	 return DisarmDuration
+case "Heal":
+	 return Heal
+case "Banish Duration:":
+	 return BanishDuration
+case "Damage first Hit:":
+	 return DamagefirstHit
+case "Submerge Lifetime:":
+	 return SubmergeLifetime
+case "Bonus Damage per Stack:":
+	 return BonusDamageperStack
+case "Ability Lifesteal:":
+	 return AbilityLifesteal
+case "Damage (Center):":
+	 return DamageCenter
+case "Basic Attacks:":
+	 return BasicAttacks
+case "Bounce Damage per Tick:":
+	 return BounceDamageperTick
+case "Slow Duration:":
+	 return SlowDuration
+case "Mana Regen per Heart:":
+	 return ManaRegenperHeart
+case "Max Traps:":
+	 return MaxTraps
+case "Damage per Blast:":
+	 return DamageperBlast
+case "Disarm:":
+	 return Disarm
+case "Crowd Control Reduction:":
+	 return CrowdControlReduction
+case "Intoxication Debuff Duration:":
+	 return IntoxicationDebuffDuration
+case "CCR per Stack:":
+	 return CCRperStack
+case "Target Debuff Duration:":
+	 return TargetDebuffDuration
+case "Ability Bonus Damage:":
+	 return AbilityBonusDamage
+case "Radius:":
+	 return Radius
+case "Rank 5:":
+	 return Rank5
+case "Attack / Movement Speed Slow:":
+	 return AttackMovementSpeedSlow
+case "Damage per Spear:":
+	 return DamageperSpear
+case "Ground Speed:":
+	 return GroundSpeed
+case "Damage Per Tick":
+	 return DamagePerTick
+case "Damage (Axe):":
+	 return DamageAxe
+case "Debuff Duration:":
+	 return DebuffDuration
+case "Taolu Assault Boost:":
+	 return TaoluAssaultBoost
+case "Attack Speed Increase:":
+	 return AttackSpeedIncrease
+case "Number Conjured:":
+	 return NumberConjured
+case "Damage/Healing per Heart:":
+	 return DamageHealingperHeart
+case "Damage Duration:":
+	 return DamageDuration
+case "Viper Shots:":
+	 return ViperShots
+case "High Tide Damage:":
+	 return HighTideDamage
+case "Protections Stolen Per Stack:":
+	 return ProtectionsStolenPerStack
+case "1 and 2 Cooldown Decrease Per Tick:":
+	 return 1and2CooldownDecreasePerTick
+case "Submerge Damage:":
+	 return SubmergeDamage
+case "Bounces:":
+	 return Bounces
+case "Fire Damage per Tick:":
+	 return FireDamageperTick
+case "Amplified Damage:":
+	 return AmplifiedDamage
+case "Lane Minion Damage:":
+	 return LaneMinionDamage
+case "Wall Duration:":
+	 return WallDuration
+case "Cooldown per Hit:":
+	 return CooldownperHit
+case "Arcane:":
+	 return Arcane
+case "HP5 / Stack:":
+	 return HP5Stack
+case "Shackle Bonus:":
+	 return ShackleBonus
+case "Damage Per Hit:":
+	 return DamagePerHit
+case "Damage Mitigation:":
+	 return DamageMitigation
+case "Physical Lifesteal:":
+	 return PhysicalLifesteal
+case "Light Heal per Tick:":
+	 return LightHealperTick
+case "Druid Damage:":
+	 return DruidDamage
+case "Damage Per Acorn:":
+	 return DamagePerAcorn
+case "Soldier's Health:":
+	 return SoldiersHealth
+case "Defense Stance:":
+	 return DefenseStance
+case "Spears Thrown:":
+	 return SpearsThrown
+case "Web Lifetime:":
+	 return WebLifetime
+case "Cone Attack Duration:":
+	 return ConeAttackDuration
+case "Flat Heal:":
+	 return FlatHeal
+case "Healing Per Consumed Stack":
+	 return HealingPerConsumedStack
+case "Protection Debuff:":
+	 return ProtectionDebuff
+case "Summon Range:":
+	 return SummonRange
+case "Madness Duration:":
+	 return MadnessDuration
+case "Bear Damage:":
+	 return BearDamage
+case "Tipsy:":
+	 return Tipsy
+case "Detonation Damage:":
+	 return DetonationDamage
+case "Ammo:":
+	 return Ammo
+case "Argus Protections:":
+	 return ArgusProtections
+case "Duration on hit:":
+	 return Durationonhit
+case "Stack/Aura Duration:":
+	 return StackAuraDuration
+case "Base Damage per Hit:":
+	 return BaseDamageperHit
+case "Passive MP5:":
+	 return PassiveMP5
+case "Damage Per Wall:":
+	 return DamagePerWall
+case "Assault Damage:":
+	 return AssaultDamage
+case "Static Damage:":
+	 return StaticDamage
+case "% Max Health per Tick:":
+	 return %MaxHealthperTick
+case "Detonation Duration:":
+	 return DetonationDuration
+case "Ranged Bonus Damage":
+	 return RangedBonusDamage
+case "Heal on Assist:":
+	 return HealonAssist
+case "Mitigation Lost:":
+	 return MitigationLost
+case "Vision Range:":
+	 return VisionRange
+case "Cooldown Reduction (Gods):":
+	 return CooldownReductionGods
+case "Root:":
+	 return Root
+case "Melee Bonus Damage:":
+	 return MeleeBonusDamage
+case "Damage Escalation:":
+	 return DamageEscalation
+case "Decoy Lifetime:":
+	 return DecoyLifetime
+case "Physical Damage Mitigation:":
+	 return PhysicalDamageMitigation
+case "Damage:":
+	 return Damage
+case "Max Health Damage:":
+	 return MaxHealthDamage
+case "Warrior's Will Boost:":
+	 return WarriorsWillBoost
+case "HP Restore (Minions):":
+	 return HPRestoreMinions
+case "Poison Duration:":
+	 return PoisonDuration
+case "God Damage per Tick:":
+	 return GodDamageperTick
+case "Damage On Hit:":
+	 return DamageOnHit
+case "Heal Steal:":
+	 return HealSteal
+case "Root Duration:":
+	 return RootDuration
+case "Stomp Damage:":
+	 return StompDamage
+case "Air Movement Speed:":
+	 return AirMovementSpeed
+case "Tier 3 Acorn Heal:":
+	 return Tier3AcornHeal
+case "Other Source Damage:":
+	 return OtherSourceDamage
+case "Secondary Damage:":
+	 return SecondaryDamage
+case "Movement Speed per Stack:":
+	 return MovementSpeedperStack
+case "Block Reflect:":
+	 return BlockReflect
+case "Max Buff Stacks:":
+	 return MaxBuffStacks
+case "Pull Stun Duration:":
+	 return PullStunDuration
+case "Physical Power:":
+	 return PhysicalPower
+case "Druid Heal:":
+	 return DruidHeal
+case "Cat Health:":
+	 return CatHealth
+case "Bonus Power:":
+	 return BonusPower
+case "Mez Duration:":
+	 return MezDuration
+case "Kills for One Stack:":
+	 return KillsforOneStack
+case "Healing Reduction Lifetime:":
+	 return HealingReductionLifetime
+case "Stun Duration:":
+	 return StunDuration
+case "Heal per Tick:":
+	 return HealperTick
+case "Broodling Damage:":
+	 return BroodlingDamage
+case "Polymorph Duration:":
+	 return PolymorphDuration
+case "Maximum Stacks:":
+	 return MaximumStacks
+case "Mana per drink:":
+	 return Manaperdrink
+case "Protection Reduction:":
+	 return ProtectionReduction
+case "Dance Move Speed:":
+	 return DanceMoveSpeed
+case "Combo Damage:":
+	 return ComboDamage
+case "Health Regeneration:":
+	 return HealthRegeneration
+case "Basic Attack Range Increase:":
+	 return BasicAttackRangeIncrease
+case "Retrieval Cooldown Reduction:":
+	 return RetrievalCooldownReduction
+case "Damage per Hit:":
+	 return DamageperHit
+case "Heal per drink:":
+	 return Healperdrink
+case "Area Damage:":
+	 return AreaDamage
+case "Argus Third Hit:":
+	 return ArgusThirdHit
+case "Benevolence Aura:":
+	 return BenevolenceAura
+case "Self Damage Mitigation:":
+	 return SelfDamageMitigation
+case "Weakening Aura:":
+	 return WeakeningAura
+case "Stun:":
+	 return Stun
+case "Minion Damage:":
+	 return MinionDamage
+case "Gust Bonus Damage:":
+	 return GustBonusDamage
+case "Bleed Duration:":
+	 return BleedDuration
+case "Dash Range:":
+	 return DashRange
+case "Teleport Range:":
+	 return TeleportRange
+case "Protections Debuff Per Stack":
+	 return ProtectionsDebuffPerStack
+case "Passive Physical Power:":
+	 return PassivePhysicalPower
+case "Detonated Damage:":
+	 return DetonatedDamage
+case "Argus First Hit:":
+	 return ArgusFirstHit
+case "Revived Health:":
+	 return RevivedHealth
+case "Taunt Duration per Hit:":
+	 return TauntDurationperHit
+case "Mirror Damage:":
+	 return MirrorDamage
+case "Attack Progression Bonus:":
+	 return AttackProgressionBonus
+case "Protections Buff:":
+	 return ProtectionsBuff
+case "HP5:":
+	 return HP5
+case "Disorient Duration:":
+	 return DisorientDuration
+case "Root and Cripple Duration:":
+	 return RootandCrippleDuration
+case "Jab Damage:":
+	 return JabDamage
+case "Physical Protection Debuff:":
+	 return PhysicalProtectionDebuff
+case "Bear Damage Per Swipe:":
+	 return BearDamagePerSwipe
+case "Drunk-O-Meter:":
+	 return Drunk-O-Meter
+case "Light Movement Speed:":
+	 return LightMovementSpeed
+case "Spread Targets Duration:":
+	 return SpreadTargetsDuration
+case "Argus Speed:":
+	 return ArgusSpeed
+case "Physical Lifesteal (Axe):":
+	 return PhysicalLifestealAxe
+case "Full Charge Damage:":
+	 return FullChargeDamage
+case "Landing Damage:":
+	 return LandingDamage
+case "Distance Scaling:":
+	 return DistanceScaling
+case "Ice Slow:":
+	 return IceSlow
+case "Basic Attack:":
+	 return BasicAttack
+case "Damage per Corpse:":
+	 return DamageperCorpse
+case "Druid Heal Per Hit:":
+	 return DruidHealPerHit
+case "Detonation Radius:":
+	 return DetonationRadius
+case "Firing Duration:":
+	 return FiringDuration
+case "Protections Stolen:":
+	 return ProtectionsStolen
+case "Air Power:":
+	 return AirPower
+case "CC Reduction:":
+	 return CCReduction
+case "Bear Slow:":
+	 return BearSlow
+case "Slow per Tick:":
+	 return SlowperTick
+case "Healing Reduction:":
+	 return HealingReduction
+case "Light Ally Heal:":
+	 return LightAllyHeal
+case "Time Slowed:":
+	 return TimeSlowed
+case "Movement Speed Per Stack":
+	 return MovementSpeedPerStack
+case "Health Conversion:":
+	 return HealthConversion
+case "Physical Damage Reduction:":
+	 return PhysicalDamageReduction
+case "Max Heals per Ability:":
+	 return MaxHealsperAbility
+case "Damage beyond 55:":
+	 return Damagebeyond55
+case "Magical Protection / Debuff:":
+	 return MagicalProtectionDebuff
+case "Shadow Slow:":
+	 return ShadowSlow
+case "Light CC Immunity Duration:":
+	 return LightCCImmunityDuration
+case "Ox Damage:":
+	 return OxDamage
+case "Attack Speed (Bow):":
+	 return AttackSpeedBow
+case "Movement Speed":
+	 return MovementSpeed
+case "Path Duration:":
+	 return PathDuration
+case "Damage per Wraith:":
+	 return DamageperWraith
+case "Slow Amount:":
+	 return SlowAmount
+case "Light Self Heal: ":
+	 return LightSelfHeal
+case "Physical Penetration:":
+	 return PhysicalPenetration
+case "Damage Increase:":
+	 return DamageIncrease
+case "Colossal Duration Increase:":
+	 return ColossalDurationIncrease
+case "Damage per Dart:":
+	 return DamageperDart

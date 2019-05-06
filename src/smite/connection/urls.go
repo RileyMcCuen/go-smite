@@ -1,4 +1,4 @@
-package apiconnection
+package connection
 
 import (
 	"fmt"

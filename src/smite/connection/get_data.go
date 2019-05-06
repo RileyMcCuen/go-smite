@@ -1,4 +1,4 @@
-package apiconnection
+package connection
 
 import (
 	"bytes"
@@ -10,8 +10,8 @@ import (
 
 // DataHandler - handles getting fresh data from the API
 type DataHandler interface {
-	GetSession()
-	TestSession()
+	UpdateSession() *Credentials
+	TestSession() bool
 	GetItems()
 	GetGods()
 }
@@ -34,8 +34,8 @@ func Ping() *[]byte {
 	return buildURLStruct("ping", nil).callAPIAndGetBody()
 }
 
-// GetSession - Gets a new session and puts it in credentials
-func (credentials *Credentials) GetSession() string {
+// UpdateSession - Updates the session if it is expires and returns caller
+func (credentials *Credentials) UpdateSession() *Credentials {
 	// Check if current session is valid
 	if !credentials.TestSession() {
 		body := buildURLStruct("createsession", credentials).callAPIAndGetBody()
@@ -46,10 +46,15 @@ func (credentials *Credentials) GetSession() string {
 		credentials.SessionID = sj.SessionID
 		credentials.saveCredentials()
 	}
-	return credentials.SessionID
+	return credentials
 }
 
-// TestSession - Tests that the session is valid
+// GetSession - Gets a new session and puts it in credentials
+func (credentials *Credentials) GetSession() string {
+	return credentials.UpdateSession().SessionID
+}
+
+// TestSession - Tests that the session is valid, returns true if session is valid, false if expired
 func (credentials *Credentials) TestSession() bool {
 	body := buildURLStruct("testsession", credentials).callAPIAndGetBody()
 	// If response body contains "Invalid" then session has expired

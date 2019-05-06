@@ -305,18 +305,18 @@ func rawItemToItem(ri rawItem) item {
 }
 
 // allRawItemsToItemSlice - converts slice of rawItem to slice of item
-func allRawItemsToItemSlice(ris []rawItem) []item {
-	is := make([]item, len(ris))
-	for i, ri := range ris {
+func allRawItemsToItemSlice(ris *[]rawItem) *[]item {
+	is := make([]item, len(*ris))
+	for i, ri := range *ris {
 		is[i] = rawItemToItem(ri)
 	}
-	return is
+	return &is
 }
 
-func getRawItems() []rawItem {
+func getRawItems() *[]rawItem {
 	file, e := ioutil.ReadFile(G.ItemsPath)
 	G.ErrorHandler(e)
 	ris := make([]rawItem, 0)
 	json.Unmarshal(file, &ris)
-	return ris
+	return &ris
 }

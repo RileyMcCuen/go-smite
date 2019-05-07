@@ -13,6 +13,7 @@
 
 # Do not include JSON files with API data or filesystem data
 *.json
+*.txt
 settings
 
 # Do not include main which is mostly used for debugging and testing atm

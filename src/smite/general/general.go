@@ -2,6 +2,7 @@ package general
 
 import (
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -50,4 +51,13 @@ func ErrorHandler(e error) bool {
 // GetTime - gets time in yyyyMMddHHmmss format
 func GetTime() string {
 	return time.Now().UTC().Format("20060102150405")
+}
+
+// CommonStringToBool - converts commonly used strings to booleans, anything unusual defaults to false
+func CommonStringToBool(s string) bool {
+	s = strings.ToLower(s)
+	if s == "y" || s == "yes" || s == "true" {
+		return true
+	}
+	return false
 }

@@ -3,43 +3,106 @@ package gods
 import (
 	"encoding/json"
 	"io/ioutil"
+	"regexp"
 	G "smite/general"
+	"strconv"
 )
 
-// MenuItemDescription - menu item description represented as int
-type MenuItemDescription int
+// rawItemPart - unparsed data regarding a specific part of an ability
+type rawItemPart struct {
+	Description string `json:"description"`
+	Value       string `json:"value"`
+}
 
-// All currently existing MenuItemDescriptions
-const (
-	NoMenuItemDescriptionM MenuItemDescription = -1
-	AreaM                  MenuItemDescription = 0
-	Level5M                MenuItemDescription = 1
-	MaxCorpsesM            MenuItemDescription = 2
-	AuraRadiusM            MenuItemDescription = 3
-	Level1M                MenuItemDescription = 4
-	Level9M                MenuItemDescription = 5
-	DamageReductionM       MenuItemDescription = 6
-	HitPointsM             MenuItemDescription = 7
-	MoveSpeedM             MenuItemDescription = 8
-	AffectsM               MenuItemDescription = 9
-	LandingRangeM          MenuItemDescription = 10
-	RangeM                 MenuItemDescription = 11
-	DamageM                MenuItemDescription = 12
-	WitnessRadiusM         MenuItemDescription = 13
-	MaxDistanceM           MenuItemDescription = 14
-	RadiusCorpseRadiusM    MenuItemDescription = 15
-	DurationM              MenuItemDescription = 16
-	BonusPowerM            MenuItemDescription = 17
-	AttackSpeedM           MenuItemDescription = 18
-	RadiusM                MenuItemDescription = 19
-	BonusMovementSpeedM    MenuItemDescription = 20
-	RangeRadiusM           MenuItemDescription = 21
-	Level13M               MenuItemDescription = 22
-	ConeM                  MenuItemDescription = 23
-	AbilityM               MenuItemDescription = 24
-	CorpseLifetimeM        MenuItemDescription = 25
-	AirDashRangeM          MenuItemDescription = 26
-)
+// rawItemDescription - unparsed data regarding a specific item (ability, basic attack, etc.)
+type rawItemDescription struct {
+	Cooldown             string        `json:"cooldown"`
+	Cost                 string        `json:"cost"`
+	Description          string        `json:"description"`
+	Menuitems            []rawItemPart `json:"menuitems"`
+	Rankitems            []rawItemPart `json:"rankitems"`
+	SecondaryDescription string        `json:"secondaryDescription"`
+}
+
+// rawDescription - unparsed data regarding wrapping a rawItemDescription
+type rawDescription struct {
+	ItemDescription rawItemDescription `json:"itemDescription"`
+}
+
+// rawAbility - unparsed data regarding an ability
+type rawAbility struct {
+	Description rawDescription `json:"Description"`
+	ID          int            `json:"Id"`
+	Summary     string         `json:"Summary"`
+	URL         string         `json:"URL"`
+}
+
+// rawGod - Holds data pertaining to unparsed god, intermediate format
+type rawGod struct {
+	// Ability names
+	AbilityName1 string `json:"Ability1"`
+	AbilityName2 string `json:"Ability2"`
+	AbilityName3 string `json:"Ability3"`
+	AbilityName4 string `json:"Ability4"`
+	AbilityName5 string `json:"Ability5"`
+	// Ability ids
+	AbilityID1 int `json:"AbilityId1"`
+	AbilityID2 int `json:"AbilityId2"`
+	AbilityID3 int `json:"AbilityId3"`
+	AbilityID4 int `json:"AbilityId4"`
+	AbilityID5 int `json:"AbilityId5"`
+	// Ability structs
+	AbilityDescription1 rawAbility `json:"Ability_1"`
+	AbilityDescription2 rawAbility `json:"Ability_2"`
+	AbilityDescription3 rawAbility `json:"Ability_3"`
+	AbilityDescription4 rawAbility `json:"Ability_4"`
+	AbilityDescription5 rawAbility `json:"Ability_5"`
+	// God stats
+	AttackSpeed                float64 `json:"AttackSpeed"`
+	AttackSpeedPerLevel        float64 `json:"AttackSpeedPerLevel"`
+	Cons                       string  `json:"Cons"`
+	HP5PerLevel                float64 `json:"HP5PerLevel"`
+	Health                     int     `json:"Health"`
+	HealthPerFive              int     `json:"HealthPerFive"`
+	HealthPerLevel             int     `json:"HealthPerLevel"`
+	Lore                       string  `json:"Lore"`
+	MP5PerLevel                float64 `json:"MP5PerLevel"`
+	MagicProtection            int     `json:"MagicProtection"`
+	MagicProtectionPerLevel    float64 `json:"MagicProtectionPerLevel"`
+	MagicalPower               int     `json:"MagicalPower"`
+	MagicalPowerPerLevel       int     `json:"MagicalPowerPerLevel"`
+	Mana                       int     `json:"Mana"`
+	ManaPerFive                float64 `json:"ManaPerFive"`
+	ManaPerLevel               int     `json:"ManaPerLevel"`
+	Name                       string  `json:"Name"`
+	OnFreeRotation             string  `json:"OnFreeRotation"`
+	Pantheon                   string  `json:"Pantheon"`
+	PhysicalPower              int     `json:"PhysicalPower"`
+	PhysicalPowerPerLevel      int     `json:"PhysicalPowerPerLevel"`
+	PhysicalProtection         int     `json:"PhysicalProtection"`
+	PhysicalProtectionPerLevel int     `json:"PhysicalProtectionPerLevel"`
+	Pros                       string  `json:"Pros"`
+	Roles                      string  `json:"Roles"`
+	Speed                      int     `json:"Speed"`
+	Title                      string  `json:"Title"`
+	Type                       string  `json:"Type"`
+	// Omitted abilityDescription* fields because they seemed to be duplicates of previous ability fields
+	// God basic attack
+	BasicAttack rawAbility `json:"basicAttack"`
+	// God image urls
+	GodAbility1URL string `json:"godAbility1_URL"`
+	GodAbility2URL string `json:"godAbility2_URL"`
+	GodAbility3URL string `json:"godAbility3_URL"`
+	GodAbility4URL string `json:"godAbility4_URL"`
+	GodAbility5URL string `json:"godAbility5_URL"`
+	GodCardURL     string `json:"godCard_URL"`
+	GodIconURL     string `json:"godIcon_URL"`
+	// God id
+	ID int `json:"id"`
+	// Misc data
+	LatestGod string `json:"latestGod"`
+	RetMsg    string `json:"ret_msg"`
+}
 
 // rawItemPartDescriptionTextToMenuItemDescription - converts menu item text to MenuItemDescription
 func rawItemPartDescriptionTextToMenuItemDescription(s string) MenuItemDescription {
@@ -103,514 +166,19 @@ func rawItemPartDescriptionTextToMenuItemDescription(s string) MenuItemDescripti
 	}
 }
 
-// RankItemDescription - menu item description represented as int
-type RankItemDescription int
+func rawItemPartToMenuItemPart(rip rawItemPart) MenuItemPart {
+	var mip MenuItemPart
+	mip.Description = rawItemPartDescriptionTextToMenuItemDescription(rip.Description)
+	mip.Value = rip.Value
+	return mip
+}
 
-// All currently existing RankItemDescription
-const (
-	NoRankItemDescription                  RankItemDescription = -1
-	MonolithDuration                       RankItemDescription = 0
-	DashMagicalProtectionReductionPerStack RankItemDescription = 1
-	ProtectionsperStack                    RankItemDescription = 2
-	BonusMoveSpeed                         RankItemDescription = 3
-	DurationonWeb                          RankItemDescription = 4
-	HighTideSpeed                          RankItemDescription = 5
-	HealSteal                              RankItemDescription = 6
-	DragonDamagePerTick                    RankItemDescription = 7
-	IceSlow                                RankItemDescription = 8
-	DebuffLifetime                         RankItemDescription = 9
-	MaxPenetration                         RankItemDescription = 10
-	LightAllyHeal                          RankItemDescription = 11
-	DamageperShot                          RankItemDescription = 12
-	ProtectionsShred                       RankItemDescription = 13
-	BanishDuration                         RankItemDescription = 14
-	ArgusThirdHit                          RankItemDescription = 15
-	MovementSpeedperStack                  RankItemDescription = 16
-	MinorDamage                            RankItemDescription = 17
-	OxDamage                               RankItemDescription = 18
-	DamageReflect                          RankItemDescription = 19
-	ManaRestored                           RankItemDescription = 20
-	InitialFuelCost                        RankItemDescription = 21
-	DamageperHit                           RankItemDescription = 22
-	DetonationRadius                       RankItemDescription = 23
-	FiringDuration                         RankItemDescription = 24
-	AdditionalPoisonedDamage               RankItemDescription = 25
-	SubmergeDamage                         RankItemDescription = 26
-	Goal2                                  RankItemDescription = 27
-	Lifetime                               RankItemDescription = 28
-	SlowperTick                            RankItemDescription = 29
-	ProtectionsReduced                     RankItemDescription = 30
-	HealperGod                             RankItemDescription = 31
-	SpawnDamage                            RankItemDescription = 32
-	WallDuration                           RankItemDescription = 33
-	StealthDuration                        RankItemDescription = 34
-	EnergyGain                             RankItemDescription = 35
-	MinkAttackSpeed                        RankItemDescription = 36
-	DamagePerWall                          RankItemDescription = 37
-	AttackSpeedDebuff                      RankItemDescription = 38
-	PassiveMP5                             RankItemDescription = 39
-	MovementSpeedBonus                     RankItemDescription = 40
-	ShotDamage                             RankItemDescription = 41
-	SubmergeLifetime                       RankItemDescription = 42
-	HealperStack                           RankItemDescription = 43
-	AmplifiedDamage                        RankItemDescription = 44
-	FrostbiteDamageBonus                   RankItemDescription = 45
-	Healperpassivestack                    RankItemDescription = 46
-	GuardDamage                            RankItemDescription = 47
-	PhysicalPowerBuff                      RankItemDescription = 48
-	CriticalStrikeChance                   RankItemDescription = 49
-	DrunkOMeter                            RankItemDescription = 50
-	AxeDamage                              RankItemDescription = 51
-	InvulnerabilityDuration                RankItemDescription = 52
-	SlashDamage                            RankItemDescription = 53
-	BuffLifetime                           RankItemDescription = 54
-	DamageperTick                          RankItemDescription = 55
-	BerserkDuration                        RankItemDescription = 56
-	DetonatedDamage                        RankItemDescription = 57
-	DruidAreaDuration                      RankItemDescription = 58
-	MovementSpeedBuffDebuff                RankItemDescription = 59
-	Manaperdrink                           RankItemDescription = 60
-	MinionBonusDamage                      RankItemDescription = 61
-	MagicalPowerPerStack                   RankItemDescription = 62
-	AttackSpeedConversion                  RankItemDescription = 63
-	KappaDamageperHit                      RankItemDescription = 64
-	FlagDuration                           RankItemDescription = 65
-	SpreadTargetsDuration                  RankItemDescription = 66
-	ProtectionsGained                      RankItemDescription = 67
-	MeleeBonusDamage                       RankItemDescription = 68
-	RootandCrippleDuration                 RankItemDescription = 69
-	Rank1                                  RankItemDescription = 70
-	Goal3                                  RankItemDescription = 71
-	PathDuration                           RankItemDescription = 72
-	PhysicalProtectionDebuff               RankItemDescription = 73
-	ThreePoisons                           RankItemDescription = 74
-	MaxHealsperAbility                     RankItemDescription = 75
-	RevivedHealth                          RankItemDescription = 76
-	ShieldHealth                           RankItemDescription = 77
-	FlatHeal                               RankItemDescription = 78
-	SelfHeal                               RankItemDescription = 79
-	HealPerHit                             RankItemDescription = 80
-	ArgusMovementSpeed                     RankItemDescription = 81
-	DamageInitialLanding                   RankItemDescription = 82
-	PenetrationperStack                    RankItemDescription = 83
-	PhysicalProtectionConversion           RankItemDescription = 84
-	DragonProtectionDebuff                 RankItemDescription = 85
-	SlowPercent                            RankItemDescription = 86
-	EchoBuff                               RankItemDescription = 87
-	MovementSpeedperstack                  RankItemDescription = 88
-	WinterChill                            RankItemDescription = 89
-	Heal                                   RankItemDescription = 90
-	MagicalPower                           RankItemDescription = 91
-	HeartLifetime                          RankItemDescription = 92
-	InitialHeal                            RankItemDescription = 93
-	PhysicalDamageMitigation               RankItemDescription = 94
-	MaxBuffStacks                          RankItemDescription = 95
-	MaxTraps                               RankItemDescription = 96
-	GustBonusDamage                        RankItemDescription = 97
-	Smashed                                RankItemDescription = 98
-	LightCCImmunityDuration                RankItemDescription = 99
-	ProtectionsDebuffPerStack              RankItemDescription = 100
-	PowerLoss                              RankItemDescription = 101
-	MaxRankDebuff                          RankItemDescription = 102
-	DecoyLifetime                          RankItemDescription = 103
-	MinkDamage                             RankItemDescription = 104
-	AdditionalScaling                      RankItemDescription = 105
-	SilenceDuration                        RankItemDescription = 106
-	NumHitstoFullCharge                    RankItemDescription = 107
-	Speed                                  RankItemDescription = 108
-	DamageIncrease                         RankItemDescription = 109
-	MagicalDamageMitigation                RankItemDescription = 110
-	MaxHealthDamage                        RankItemDescription = 111
-	LandingDamage                          RankItemDescription = 112
-	DamageReduction                        RankItemDescription = 113
-	StompDamage                            RankItemDescription = 114
-	BuffDuration                           RankItemDescription = 115
-	MoveSpeedAxe                           RankItemDescription = 116
-	AttackSpeedBuff                        RankItemDescription = 117
-	SpearsThrown                           RankItemDescription = 118
-	BoostedCC                              RankItemDescription = 119
-	TornadoLifetime                        RankItemDescription = 120
-	BaseDamageperHit                       RankItemDescription = 121
-	MadnessDamagePerHit                    RankItemDescription = 122
-	PhysicalProtection                     RankItemDescription = 123
-	PullStunDuration                       RankItemDescription = 124
-	AttackDamage                           RankItemDescription = 125
-	DisarmDuration                         RankItemDescription = 126
-	PercentMaxHealthperTick                RankItemDescription = 127
-	HealthConversion                       RankItemDescription = 128
-	Tier3AcornHeal                         RankItemDescription = 129
-	BuffperStack                           RankItemDescription = 130
-	StrafePenalty                          RankItemDescription = 131
-	BonusEnergyGain                        RankItemDescription = 132
-	PhysicalLifestealAxe                   RankItemDescription = 133
-	MP5                                    RankItemDescription = 134
-	PassiveDuration                        RankItemDescription = 135
-	BonusPower                             RankItemDescription = 136
-	ConeDamage                             RankItemDescription = 137
-	PhysicalLifesteal                      RankItemDescription = 138
-	NemesisBuffDuration                    RankItemDescription = 139
-	MaxShackles                            RankItemDescription = 140
-	PhysicalPenetration                    RankItemDescription = 141
-	MaxCharge                              RankItemDescription = 142
-	MP5PerStack                            RankItemDescription = 143
-	PowerDebuff                            RankItemDescription = 144
-	MaxStacks                              RankItemDescription = 145
-	TargetDebuffDuration                   RankItemDescription = 146
-	Tipsy                                  RankItemDescription = 147
-	SpeedSlowDuration                      RankItemDescription = 148
-	MesmerizeDuration                      RankItemDescription = 149
-	AttackSpeedperStack                    RankItemDescription = 150
-	DarkSlow                               RankItemDescription = 151
-	HealingDebuff                          RankItemDescription = 152
-	FearDurationperHit                     RankItemDescription = 153
-	WallPortalRange                        RankItemDescription = 154
-	JabDamage                              RankItemDescription = 155
-	UppercutDamage                         RankItemDescription = 156
-	StunCenter                             RankItemDescription = 157
-	CardLifetime                           RankItemDescription = 158
-	PoisonSlow                             RankItemDescription = 159
-	LightMagicalandPhysicalProtections     RankItemDescription = 160
-	BurstDamage                            RankItemDescription = 161
-	DistanceScaling                        RankItemDescription = 162
-	AbilityBonusDamage                     RankItemDescription = 163
-	MP5Increase                            RankItemDescription = 164
-	MoveSpeed                              RankItemDescription = 165
-	AttackMovementSpeedSlow                RankItemDescription = 166
-	AirMovementSpeed                       RankItemDescription = 167
-	HighTideDamage                         RankItemDescription = 168
-	HealperTick                            RankItemDescription = 169
-	SpinDamage                             RankItemDescription = 170
-	FissureLifetime                        RankItemDescription = 171
-	PhysicalPowerBow                       RankItemDescription = 172
-	Damageappliedtwice                     RankItemDescription = 173
-	AttackSpeedReduction                   RankItemDescription = 174
-	DamageDuration                         RankItemDescription = 175
-	HealonKill                             RankItemDescription = 176
-	Lifesteal                              RankItemDescription = 177
-	ArgusSecondHit                         RankItemDescription = 178
-	TrembleDuration                        RankItemDescription = 179
-	SpringGrowth                           RankItemDescription = 180
-	FumesDuration                          RankItemDescription = 181
-	MezDuration                            RankItemDescription = 182
-	StealthMovementSpeed                   RankItemDescription = 183
-	PowerReduction                         RankItemDescription = 184
-	BoarLifetime                           RankItemDescription = 185
-	Heat                                   RankItemDescription = 186
-	ConeAttackDuration                     RankItemDescription = 187
-	DruidHealPerHit                        RankItemDescription = 188
-	BasicAttack                            RankItemDescription = 189
-	ArgusHeal                              RankItemDescription = 190
-	GustsSpawned                           RankItemDescription = 191
-	TimeSlowed                             RankItemDescription = 192
-	DamageMitigation                       RankItemDescription = 193
-	MaxHPDamage                            RankItemDescription = 194
-	ProtectionsDebuffLifetime              RankItemDescription = 195
-	InnerDamage                            RankItemDescription = 196
-	DamagePerHit                           RankItemDescription = 197
-	DamageReturnedasHealing                RankItemDescription = 198
-	ProtectionsDebuff                      RankItemDescription = 199
-	ComboDamage                            RankItemDescription = 200
-	TauntDuration                          RankItemDescription = 201
-	ColossalDuration                       RankItemDescription = 202
-	CooldownperHit                         RankItemDescription = 203
-	SpeedBuff                              RankItemDescription = 204
-	Damagepertick                          RankItemDescription = 205
-	ReturnDamage                           RankItemDescription = 206
-	ArgusAuraDamage                        RankItemDescription = 207
-	OuterDamage                            RankItemDescription = 208
-	MagicalPowerBuff                       RankItemDescription = 209
-	CleaveDamage                           RankItemDescription = 210
-	CloudDuration                          RankItemDescription = 211
-	AirPower                               RankItemDescription = 212
-	VisionRange                            RankItemDescription = 213
-	ExecuteThreshold                       RankItemDescription = 214
-	Drinksperpool                          RankItemDescription = 215
-	FirstTargetDuration                    RankItemDescription = 216
-	TigerDamage                            RankItemDescription = 217
-	MaxTargets                             RankItemDescription = 218
-	PhysicalPowerBonus                     RankItemDescription = 219
-	ArgusProtections                       RankItemDescription = 220
-	DetonationDamage                       RankItemDescription = 221
-	HPRestoreMinions                       RankItemDescription = 222
-	RootDuration                           RankItemDescription = 223
-	MaxAurasPossible                       RankItemDescription = 224
-	Slow                                   RankItemDescription = 225
-	JealousyDuration                       RankItemDescription = 226
-	ArgusSpeed                             RankItemDescription = 227
-	ViperShots                             RankItemDescription = 228
-	StunDurationAxe                        RankItemDescription = 229
-	Healing                                RankItemDescription = 230
-	DanceMoveSpeed                         RankItemDescription = 231
-	WarriorsWillBoost                      RankItemDescription = 232
-	ColossalDurationIncrease               RankItemDescription = 233
-	ProtectionsStolen                      RankItemDescription = 234
-	DruidHeal                              RankItemDescription = 235
-	FirstandSecondCooldownDecreasePerTick  RankItemDescription = 236
-	RangedDamage                           RankItemDescription = 237
-	TidalMeter                             RankItemDescription = 238
-	TwoPoisons                             RankItemDescription = 239
-	BoostedProtectionsStolen               RankItemDescription = 240
-	ProtectionsBonus                       RankItemDescription = 241
-	DamageperDart                          RankItemDescription = 242
-	ArgusHealth                            RankItemDescription = 243
-	HysteriaPerHit                         RankItemDescription = 244
-	Healperdrink                           RankItemDescription = 245
-	DamageCenter                           RankItemDescription = 246
-	MarkDuration                           RankItemDescription = 247
-	PhysicalPowerIncrease                  RankItemDescription = 248
-	FullChargeDamage                       RankItemDescription = 249
-	SlowDebuff                             RankItemDescription = 250
-	PoisonDamage                           RankItemDescription = 251
-	Duration                               RankItemDescription = 252
-	AttackSpeedIncrease                    RankItemDescription = 253
-	DamageHealingperHeart                  RankItemDescription = 254
-	DamageperSpear                         RankItemDescription = 255
-	PercentofDamageTaken                   RankItemDescription = 256
-	Cooldownreduction                      RankItemDescription = 257
-	DamageperBlast                         RankItemDescription = 258
-	ProtectionDebuff                       RankItemDescription = 259
-	WeaveHeal                              RankItemDescription = 260
-	DruidSlow                              RankItemDescription = 261
-	SummonRange                            RankItemDescription = 262
-	PoisonDuration                         RankItemDescription = 263
-	AttackProgressionBonus                 RankItemDescription = 264
-	StackAuraDuration                      RankItemDescription = 265
-	DamageIncreaseperCharge                RankItemDescription = 266
-	DamageBuff                             RankItemDescription = 267
-	AssaultDamage                          RankItemDescription = 268
-	ManaRegenperHeart                      RankItemDescription = 269
-	MaxDamage                              RankItemDescription = 270
-	Goal1                                  RankItemDescription = 271
-	BerserkThreshold                       RankItemDescription = 272
-	SickleSlowIncrease                     RankItemDescription = 273
-	Protections                            RankItemDescription = 274
-	HealingReduction                       RankItemDescription = 275
-	ProtectionsStolenPerStack              RankItemDescription = 276
-	MadnessDuration                        RankItemDescription = 277
-	WebRadius                              RankItemDescription = 278
-	AssaultStance                          RankItemDescription = 279
-	DamagePerAcorn                         RankItemDescription = 280
-	BonusProtections                       RankItemDescription = 281
-	DruidDamagePerHit                      RankItemDescription = 282
-	DarkMagicalPower                       RankItemDescription = 283
-	TauntDurationperHit                    RankItemDescription = 284
-	PhysicalPower                          RankItemDescription = 285
-	MagicalProtectionDebuff                RankItemDescription = 286
-	HealingPerConsumedStack                RankItemDescription = 287
-	CooldownReductionGods                  RankItemDescription = 288
-	HealingperTick                         RankItemDescription = 289
-	AmplifiedSpeed                         RankItemDescription = 290
-	WallPortalDuration                     RankItemDescription = 291
-	AlliedMitigation                       RankItemDescription = 292
-	LightSelfHeal                          RankItemDescription = 293
-	PhysicalDamageReduction                RankItemDescription = 294
-	Arcane                                 RankItemDescription = 295
-	BearStunDuration                       RankItemDescription = 296
-	MinionExplode                          RankItemDescription = 297
-	MovementSpeed                          RankItemDescription = 298
-	DruidPowerDebuff                       RankItemDescription = 299
-	Ammo                                   RankItemDescription = 300
-	PowerGain                              RankItemDescription = 301
-	DamageperCorpse                        RankItemDescription = 302
-	WoundDuration                          RankItemDescription = 303
-	InitialDamage                          RankItemDescription = 304
-	ProtectionsBuff                        RankItemDescription = 305
-	PhaseSlow                              RankItemDescription = 306
-	BoostedSlow                            RankItemDescription = 307
-	ProtectionsDuration                    RankItemDescription = 308
-	Power                                  RankItemDescription = 309
-	DetonationDuration                     RankItemDescription = 310
-	DamageEscalation                       RankItemDescription = 311
-	PhysicalPowerperStack                  RankItemDescription = 312
-	Stun                                   RankItemDescription = 313
-	TigerStun                              RankItemDescription = 314
-	Increaseddamagetaken                   RankItemDescription = 315
-	SummerHeat                             RankItemDescription = 316
-	TurtleDamage                           RankItemDescription = 317
-	FistDamage                             RankItemDescription = 318
-	FlyingMinionDamage                     RankItemDescription = 319
-	BonusPhysicalPower                     RankItemDescription = 320
-	ChainSlow                              RankItemDescription = 321
-	DashDamage                             RankItemDescription = 322
-	LaneMinionDamage                       RankItemDescription = 323
-	HealingDebuffDuration                  RankItemDescription = 324
-	RangedBonusDamage                      RankItemDescription = 325
-	StunDuration                           RankItemDescription = 326
-	OtherSourceDamage                      RankItemDescription = 327
-	EssenceDrinkerBuff                     RankItemDescription = 328
-	BonusDamageperStack                    RankItemDescription = 329
-	BlockReflect                           RankItemDescription = 330
-	HP5                                    RankItemDescription = 331
-	MovementSpeedPerStack                  RankItemDescription = 332
-	SelfDamageMitigation                   RankItemDescription = 333
-	Silence                                RankItemDescription = 334
-	ArgusLifetime                          RankItemDescription = 335
-	DropchanceforArrowPickup               RankItemDescription = 336
-	Durationonhit                          RankItemDescription = 337
-	BasicAttackRangeIncrease               RankItemDescription = 338
-	ShatterDamage                          RankItemDescription = 339
-	PhysicalProtectionReducedPerStack      RankItemDescription = 340
-	MirrorDamage                           RankItemDescription = 341
-	Damagewithin55                         RankItemDescription = 342
-	CatProtections                         RankItemDescription = 343
-	TaoluAssaultBoost                      RankItemDescription = 344
-	Shield                                 RankItemDescription = 345
-	CarryDuration                          RankItemDescription = 346
-	GlyphsSpawned                          RankItemDescription = 347
-	PhysicalDamage                         RankItemDescription = 348
-	GodDamageperTick                       RankItemDescription = 349
-	LightningDamage                        RankItemDescription = 350
-	IncreasedHealingperStack               RankItemDescription = 351
-	SpeedBuffperTargetShackled             RankItemDescription = 352
-	Attackspeedconversion                  RankItemDescription = 353
-	ArgusFirstHit                          RankItemDescription = 354
-	BleedDuration                          RankItemDescription = 355
-	BleedDamage                            RankItemDescription = 356
-	HealperMinion                          RankItemDescription = 357
-	Range                                  RankItemDescription = 358
-	MarkLifetime                           RankItemDescription = 359
-	LightHealperTick                       RankItemDescription = 360
-	MissingHealthHeal                      RankItemDescription = 361
-	DisorientDuration                      RankItemDescription = 362
-	AttackRange                            RankItemDescription = 363
-	MitigationLost                         RankItemDescription = 364
-	CCImmunityDuration                     RankItemDescription = 365
-	Bounces                                RankItemDescription = 366
-	DamagePerTick                          RankItemDescription = 367
-	BenevolenceAura                        RankItemDescription = 368
-	DamageAxe                              RankItemDescription = 369
-	PullDamageperTick                      RankItemDescription = 370
-	DamageTakenIncrease                    RankItemDescription = 371
-	StaticDamage                           RankItemDescription = 372
-	CCReduction                            RankItemDescription = 373
-	AutumnDecay                            RankItemDescription = 374
-	MagicalScaling                         RankItemDescription = 375
-	GroundSpeed                            RankItemDescription = 376
-	BasicAttackDamage                      RankItemDescription = 377
-	SlowperStack                           RankItemDescription = 378
-	MovementSpeedSlow                      RankItemDescription = 379
-	DarkProtectionsDebuff                  RankItemDescription = 380
-	AttackSpeedBow                         RankItemDescription = 381
-	CritChance                             RankItemDescription = 382
-	MaxHalos                               RankItemDescription = 383
-	RetrievalCooldownReduction             RankItemDescription = 384
-	Charges                                RankItemDescription = 385
-	SlowPercentage                         RankItemDescription = 386
-	AttackSpeed                            RankItemDescription = 387
-	DamageOnHit                            RankItemDescription = 388
-	HealperHeart                           RankItemDescription = 389
-	ValorAura                              RankItemDescription = 390
-	Rank5                                  RankItemDescription = 391
-	GustDamage                             RankItemDescription = 392
-	TrueDamage                             RankItemDescription = 393
-	HPRestoreGods                          RankItemDescription = 394
-	CrippleDuration                        RankItemDescription = 395
-	Root                                   RankItemDescription = 396
-	CavalryChargeBoost                     RankItemDescription = 397
-	DarkDamage                             RankItemDescription = 398
-	MaximumStacks                          RankItemDescription = 399
-	CCRperStack                            RankItemDescription = 400
-	MovementSpeedBuff                      RankItemDescription = 401
-	HealonAssist                           RankItemDescription = 402
-	DamageperWraith                        RankItemDescription = 403
-	KillHPThreshold                        RankItemDescription = 404
-	BonusSpeedLowHealth                    RankItemDescription = 405
-	SoldiersHealth                         RankItemDescription = 406
-	Disarm                                 RankItemDescription = 407
-	KappaHealth                            RankItemDescription = 408
-	LightMovementSpeed                     RankItemDescription = 409
-	Broodlings                             RankItemDescription = 410
-	BonusDamage                            RankItemDescription = 411
-	Hitstodestroy                          RankItemDescription = 412
-	AreaDamage                             RankItemDescription = 413
-	DetonatedHealing                       RankItemDescription = 414
-	DamageBow                              RankItemDescription = 415
-	ProtectionBuff                         RankItemDescription = 416
-	BounceDamageperTick                    RankItemDescription = 417
-	BearSelfBuff                           RankItemDescription = 418
-	Damagebeyond55                         RankItemDescription = 419
-	ProtectionShred                        RankItemDescription = 420
-	ShadowCloneSpeed                       RankItemDescription = 421
-	DetonateDamage                         RankItemDescription = 422
-	DoTDamage                              RankItemDescription = 423
-	IntoxicationDebuffDuration             RankItemDescription = 424
-	Radius                                 RankItemDescription = 425
-	DamagePerStrike                        RankItemDescription = 426
-	Rank3                                  RankItemDescription = 427
-	EmergeCrashDamage                      RankItemDescription = 428
-	DamagePerBlade                         RankItemDescription = 429
-	DruidDamage                            RankItemDescription = 430
-	MinionStun                             RankItemDescription = 431
-	Mesmerize                              RankItemDescription = 432
-	FireDamageperTick                      RankItemDescription = 433
-	WeakeningAura                          RankItemDescription = 434
-	BonusHealth                            RankItemDescription = 435
-	SlamDamageIncrease                     RankItemDescription = 436
-	OrbDamage                              RankItemDescription = 437
-	HealoverTime                           RankItemDescription = 438
-	BasicAttacks                           RankItemDescription = 439
-	MovementSpeedIncrease                  RankItemDescription = 440
-	BearSlow                               RankItemDescription = 441
-	PassivePhysicalPower                   RankItemDescription = 442
-	BoostedHealing                         RankItemDescription = 443
-	ProtectionReduction                    RankItemDescription = 444
-	ProtectionDuration                     RankItemDescription = 445
-	KillsforOneStack                       RankItemDescription = 446
-	FinalDamage                            RankItemDescription = 447
-	KnockupTime                            RankItemDescription = 448
-	SlamDamage                             RankItemDescription = 449
-	MinionDamage                           RankItemDescription = 450
-	TeleportRange                          RankItemDescription = 451
-	DashRange                              RankItemDescription = 452
-	DebuffDuration                         RankItemDescription = 453
-	PolymorphDuration                      RankItemDescription = 454
-	MaxChargeDmgHealScale                  RankItemDescription = 455
-	Arcs                                   RankItemDescription = 456
-	HealthRegeneration                     RankItemDescription = 457
-	ShieldDuration                         RankItemDescription = 458
-	WebLifetime                            RankItemDescription = 459
-	ShadowSlow                             RankItemDescription = 460
-	HealingReductionLifetime               RankItemDescription = 461
-	LightDamage                            RankItemDescription = 462
-	SlowDuration                           RankItemDescription = 463
-	SubmergeSlow                           RankItemDescription = 464
-	HealPerTick                            RankItemDescription = 465
-	AbilityLifesteal                       RankItemDescription = 466
-	ConvictionBoost                        RankItemDescription = 467
-	LightDuration                          RankItemDescription = 468
-	SlowAmount                             RankItemDescription = 469
-	Powerperstack                          RankItemDescription = 470
-	ThunderDamage                          RankItemDescription = 471
-	CatHealth                              RankItemDescription = 472
-	CooldownReduction                      RankItemDescription = 473
-	HP5Stack                               RankItemDescription = 474
-	BonusDamageGods                        RankItemDescription = 475
-	SoulHealth                             RankItemDescription = 476
-	GodBonusDamage                         RankItemDescription = 477
-	DefenseStance                          RankItemDescription = 478
-	Damage                                 RankItemDescription = 479
-	BearDamage                             RankItemDescription = 480
-	Slowduration                           RankItemDescription = 481
-	MaximumMitigation                      RankItemDescription = 482
-	BearDamagePerSwipe                     RankItemDescription = 483
-	BroodlingDamage                        RankItemDescription = 484
-	DamagefirstHit                         RankItemDescription = 485
-	CrowdControlReduction                  RankItemDescription = 486
-	HealthBonus                            RankItemDescription = 487
-	GustSlow                               RankItemDescription = 488
-	JealousyDamageIncrease                 RankItemDescription = 489
-	SubmergeManaRegen                      RankItemDescription = 490
-	AdditionalDamage                       RankItemDescription = 491
-	DragonBreathDamage                     RankItemDescription = 492
-	SecondaryDamage                        RankItemDescription = 493
-	DetonateLifetime                       RankItemDescription = 494
-	RiftDuration                           RankItemDescription = 495
-	NumberConjured                         RankItemDescription = 496
-	EmpoweredBuff                          RankItemDescription = 497
-	ShackleBonus                           RankItemDescription = 498
-	Penetration                            RankItemDescription = 499
-	PullDuration                           RankItemDescription = 500
-)
+func rawItemPartToRankItemPart(rip rawItemPart) RankItemPart {
+	var rrip RankItemPart
+	rrip.Description = rawItemPartDescriptionTextToRankItemDescription(rip.Description)
+	rrip.Value = rip.Value
+	return rrip
+}
 
 // rawItemPartDescriptionTextToMenuItemDescription - converts menu item text to MenuItemDescription
 func rawItemPartDescriptionTextToRankItemDescription(s string) RankItemDescription {
@@ -1640,22 +1208,566 @@ func rawItemPartDescriptionTextToRankItemDescription(s string) RankItemDescripti
 	}
 }
 
+// MenuItemDescription - menu item description represented as int
+type MenuItemDescription int
+
+// All currently existing MenuItemDescriptions
+const (
+	NoMenuItemDescriptionM MenuItemDescription = -1
+	AreaM                  MenuItemDescription = 0
+	Level5M                MenuItemDescription = 1
+	MaxCorpsesM            MenuItemDescription = 2
+	AuraRadiusM            MenuItemDescription = 3
+	Level1M                MenuItemDescription = 4
+	Level9M                MenuItemDescription = 5
+	DamageReductionM       MenuItemDescription = 6
+	HitPointsM             MenuItemDescription = 7
+	MoveSpeedM             MenuItemDescription = 8
+	AffectsM               MenuItemDescription = 9
+	LandingRangeM          MenuItemDescription = 10
+	RangeM                 MenuItemDescription = 11
+	DamageM                MenuItemDescription = 12
+	WitnessRadiusM         MenuItemDescription = 13
+	MaxDistanceM           MenuItemDescription = 14
+	RadiusCorpseRadiusM    MenuItemDescription = 15
+	DurationM              MenuItemDescription = 16
+	BonusPowerM            MenuItemDescription = 17
+	AttackSpeedM           MenuItemDescription = 18
+	RadiusM                MenuItemDescription = 19
+	BonusMovementSpeedM    MenuItemDescription = 20
+	RangeRadiusM           MenuItemDescription = 21
+	Level13M               MenuItemDescription = 22
+	ConeM                  MenuItemDescription = 23
+	AbilityM               MenuItemDescription = 24
+	CorpseLifetimeM        MenuItemDescription = 25
+	AirDashRangeM          MenuItemDescription = 26
+)
+
 // MenuItemPart - parsed data regarding a specific part of an ability
 type MenuItemPart struct {
-	Description string
+	Description MenuItemDescription
 	Value       string
 }
 
+// RankItemDescription - menu item description represented as int
+type RankItemDescription int
+
+// All currently existing RankItemDescription
+const (
+	NoRankItemDescription                  RankItemDescription = -1
+	MonolithDuration                       RankItemDescription = 0
+	DashMagicalProtectionReductionPerStack RankItemDescription = 1
+	ProtectionsperStack                    RankItemDescription = 2
+	BonusMoveSpeed                         RankItemDescription = 3
+	DurationonWeb                          RankItemDescription = 4
+	HighTideSpeed                          RankItemDescription = 5
+	HealSteal                              RankItemDescription = 6
+	DragonDamagePerTick                    RankItemDescription = 7
+	IceSlow                                RankItemDescription = 8
+	DebuffLifetime                         RankItemDescription = 9
+	MaxPenetration                         RankItemDescription = 10
+	LightAllyHeal                          RankItemDescription = 11
+	DamageperShot                          RankItemDescription = 12
+	ProtectionsShred                       RankItemDescription = 13
+	BanishDuration                         RankItemDescription = 14
+	ArgusThirdHit                          RankItemDescription = 15
+	MovementSpeedperStack                  RankItemDescription = 16
+	MinorDamage                            RankItemDescription = 17
+	OxDamage                               RankItemDescription = 18
+	DamageReflect                          RankItemDescription = 19
+	ManaRestored                           RankItemDescription = 20
+	InitialFuelCost                        RankItemDescription = 21
+	DamageperHit                           RankItemDescription = 22
+	DetonationRadius                       RankItemDescription = 23
+	FiringDuration                         RankItemDescription = 24
+	AdditionalPoisonedDamage               RankItemDescription = 25
+	SubmergeDamage                         RankItemDescription = 26
+	Goal2                                  RankItemDescription = 27
+	Lifetime                               RankItemDescription = 28
+	SlowperTick                            RankItemDescription = 29
+	ProtectionsReduced                     RankItemDescription = 30
+	HealperGod                             RankItemDescription = 31
+	SpawnDamage                            RankItemDescription = 32
+	WallDuration                           RankItemDescription = 33
+	StealthDuration                        RankItemDescription = 34
+	EnergyGain                             RankItemDescription = 35
+	MinkAttackSpeed                        RankItemDescription = 36
+	DamagePerWall                          RankItemDescription = 37
+	AttackSpeedDebuff                      RankItemDescription = 38
+	PassiveMP5                             RankItemDescription = 39
+	MovementSpeedBonus                     RankItemDescription = 40
+	ShotDamage                             RankItemDescription = 41
+	SubmergeLifetime                       RankItemDescription = 42
+	HealperStack                           RankItemDescription = 43
+	AmplifiedDamage                        RankItemDescription = 44
+	FrostbiteDamageBonus                   RankItemDescription = 45
+	Healperpassivestack                    RankItemDescription = 46
+	GuardDamage                            RankItemDescription = 47
+	PhysicalPowerBuff                      RankItemDescription = 48
+	CriticalStrikeChance                   RankItemDescription = 49
+	DrunkOMeter                            RankItemDescription = 50
+	AxeDamage                              RankItemDescription = 51
+	InvulnerabilityDuration                RankItemDescription = 52
+	SlashDamage                            RankItemDescription = 53
+	BuffLifetime                           RankItemDescription = 54
+	DamageperTick                          RankItemDescription = 55
+	BerserkDuration                        RankItemDescription = 56
+	DetonatedDamage                        RankItemDescription = 57
+	DruidAreaDuration                      RankItemDescription = 58
+	MovementSpeedBuffDebuff                RankItemDescription = 59
+	Manaperdrink                           RankItemDescription = 60
+	MinionBonusDamage                      RankItemDescription = 61
+	MagicalPowerPerStack                   RankItemDescription = 62
+	AttackSpeedConversion                  RankItemDescription = 63
+	KappaDamageperHit                      RankItemDescription = 64
+	FlagDuration                           RankItemDescription = 65
+	SpreadTargetsDuration                  RankItemDescription = 66
+	ProtectionsGained                      RankItemDescription = 67
+	MeleeBonusDamage                       RankItemDescription = 68
+	RootandCrippleDuration                 RankItemDescription = 69
+	Rank1                                  RankItemDescription = 70
+	Goal3                                  RankItemDescription = 71
+	PathDuration                           RankItemDescription = 72
+	PhysicalProtectionDebuff               RankItemDescription = 73
+	ThreePoisons                           RankItemDescription = 74
+	MaxHealsperAbility                     RankItemDescription = 75
+	RevivedHealth                          RankItemDescription = 76
+	ShieldHealth                           RankItemDescription = 77
+	FlatHeal                               RankItemDescription = 78
+	SelfHeal                               RankItemDescription = 79
+	HealPerHit                             RankItemDescription = 80
+	ArgusMovementSpeed                     RankItemDescription = 81
+	DamageInitialLanding                   RankItemDescription = 82
+	PenetrationperStack                    RankItemDescription = 83
+	PhysicalProtectionConversion           RankItemDescription = 84
+	DragonProtectionDebuff                 RankItemDescription = 85
+	SlowPercent                            RankItemDescription = 86
+	EchoBuff                               RankItemDescription = 87
+	MovementSpeedperstack                  RankItemDescription = 88
+	WinterChill                            RankItemDescription = 89
+	Heal                                   RankItemDescription = 90
+	MagicalPower                           RankItemDescription = 91
+	HeartLifetime                          RankItemDescription = 92
+	InitialHeal                            RankItemDescription = 93
+	PhysicalDamageMitigation               RankItemDescription = 94
+	MaxBuffStacks                          RankItemDescription = 95
+	MaxTraps                               RankItemDescription = 96
+	GustBonusDamage                        RankItemDescription = 97
+	Smashed                                RankItemDescription = 98
+	LightCCImmunityDuration                RankItemDescription = 99
+	ProtectionsDebuffPerStack              RankItemDescription = 100
+	PowerLoss                              RankItemDescription = 101
+	MaxRankDebuff                          RankItemDescription = 102
+	DecoyLifetime                          RankItemDescription = 103
+	MinkDamage                             RankItemDescription = 104
+	AdditionalScaling                      RankItemDescription = 105
+	SilenceDuration                        RankItemDescription = 106
+	NumHitstoFullCharge                    RankItemDescription = 107
+	Speed                                  RankItemDescription = 108
+	DamageIncrease                         RankItemDescription = 109
+	MagicalDamageMitigation                RankItemDescription = 110
+	MaxHealthDamage                        RankItemDescription = 111
+	LandingDamage                          RankItemDescription = 112
+	DamageReduction                        RankItemDescription = 113
+	StompDamage                            RankItemDescription = 114
+	BuffDuration                           RankItemDescription = 115
+	MoveSpeedAxe                           RankItemDescription = 116
+	AttackSpeedBuff                        RankItemDescription = 117
+	SpearsThrown                           RankItemDescription = 118
+	BoostedCC                              RankItemDescription = 119
+	TornadoLifetime                        RankItemDescription = 120
+	BaseDamageperHit                       RankItemDescription = 121
+	MadnessDamagePerHit                    RankItemDescription = 122
+	PhysicalProtection                     RankItemDescription = 123
+	PullStunDuration                       RankItemDescription = 124
+	AttackDamage                           RankItemDescription = 125
+	DisarmDuration                         RankItemDescription = 126
+	PercentMaxHealthperTick                RankItemDescription = 127
+	HealthConversion                       RankItemDescription = 128
+	Tier3AcornHeal                         RankItemDescription = 129
+	BuffperStack                           RankItemDescription = 130
+	StrafePenalty                          RankItemDescription = 131
+	BonusEnergyGain                        RankItemDescription = 132
+	PhysicalLifestealAxe                   RankItemDescription = 133
+	MP5                                    RankItemDescription = 134
+	PassiveDuration                        RankItemDescription = 135
+	BonusPower                             RankItemDescription = 136
+	ConeDamage                             RankItemDescription = 137
+	PhysicalLifesteal                      RankItemDescription = 138
+	NemesisBuffDuration                    RankItemDescription = 139
+	MaxShackles                            RankItemDescription = 140
+	PhysicalPenetration                    RankItemDescription = 141
+	MaxCharge                              RankItemDescription = 142
+	MP5PerStack                            RankItemDescription = 143
+	PowerDebuff                            RankItemDescription = 144
+	MaxStacks                              RankItemDescription = 145
+	TargetDebuffDuration                   RankItemDescription = 146
+	Tipsy                                  RankItemDescription = 147
+	SpeedSlowDuration                      RankItemDescription = 148
+	MesmerizeDuration                      RankItemDescription = 149
+	AttackSpeedperStack                    RankItemDescription = 150
+	DarkSlow                               RankItemDescription = 151
+	HealingDebuff                          RankItemDescription = 152
+	FearDurationperHit                     RankItemDescription = 153
+	WallPortalRange                        RankItemDescription = 154
+	JabDamage                              RankItemDescription = 155
+	UppercutDamage                         RankItemDescription = 156
+	StunCenter                             RankItemDescription = 157
+	CardLifetime                           RankItemDescription = 158
+	PoisonSlow                             RankItemDescription = 159
+	LightMagicalandPhysicalProtections     RankItemDescription = 160
+	BurstDamage                            RankItemDescription = 161
+	DistanceScaling                        RankItemDescription = 162
+	AbilityBonusDamage                     RankItemDescription = 163
+	MP5Increase                            RankItemDescription = 164
+	MoveSpeed                              RankItemDescription = 165
+	AttackMovementSpeedSlow                RankItemDescription = 166
+	AirMovementSpeed                       RankItemDescription = 167
+	HighTideDamage                         RankItemDescription = 168
+	HealperTick                            RankItemDescription = 169
+	SpinDamage                             RankItemDescription = 170
+	FissureLifetime                        RankItemDescription = 171
+	PhysicalPowerBow                       RankItemDescription = 172
+	Damageappliedtwice                     RankItemDescription = 173
+	AttackSpeedReduction                   RankItemDescription = 174
+	DamageDuration                         RankItemDescription = 175
+	HealonKill                             RankItemDescription = 176
+	Lifesteal                              RankItemDescription = 177
+	ArgusSecondHit                         RankItemDescription = 178
+	TrembleDuration                        RankItemDescription = 179
+	SpringGrowth                           RankItemDescription = 180
+	FumesDuration                          RankItemDescription = 181
+	MezDuration                            RankItemDescription = 182
+	StealthMovementSpeed                   RankItemDescription = 183
+	PowerReduction                         RankItemDescription = 184
+	BoarLifetime                           RankItemDescription = 185
+	Heat                                   RankItemDescription = 186
+	ConeAttackDuration                     RankItemDescription = 187
+	DruidHealPerHit                        RankItemDescription = 188
+	BasicAttack                            RankItemDescription = 189
+	ArgusHeal                              RankItemDescription = 190
+	GustsSpawned                           RankItemDescription = 191
+	TimeSlowed                             RankItemDescription = 192
+	DamageMitigation                       RankItemDescription = 193
+	MaxHPDamage                            RankItemDescription = 194
+	ProtectionsDebuffLifetime              RankItemDescription = 195
+	InnerDamage                            RankItemDescription = 196
+	DamagePerHit                           RankItemDescription = 197
+	DamageReturnedasHealing                RankItemDescription = 198
+	ProtectionsDebuff                      RankItemDescription = 199
+	ComboDamage                            RankItemDescription = 200
+	TauntDuration                          RankItemDescription = 201
+	ColossalDuration                       RankItemDescription = 202
+	CooldownperHit                         RankItemDescription = 203
+	SpeedBuff                              RankItemDescription = 204
+	Damagepertick                          RankItemDescription = 205
+	ReturnDamage                           RankItemDescription = 206
+	ArgusAuraDamage                        RankItemDescription = 207
+	OuterDamage                            RankItemDescription = 208
+	MagicalPowerBuff                       RankItemDescription = 209
+	CleaveDamage                           RankItemDescription = 210
+	CloudDuration                          RankItemDescription = 211
+	AirPower                               RankItemDescription = 212
+	VisionRange                            RankItemDescription = 213
+	ExecuteThreshold                       RankItemDescription = 214
+	Drinksperpool                          RankItemDescription = 215
+	FirstTargetDuration                    RankItemDescription = 216
+	TigerDamage                            RankItemDescription = 217
+	MaxTargets                             RankItemDescription = 218
+	PhysicalPowerBonus                     RankItemDescription = 219
+	ArgusProtections                       RankItemDescription = 220
+	DetonationDamage                       RankItemDescription = 221
+	HPRestoreMinions                       RankItemDescription = 222
+	RootDuration                           RankItemDescription = 223
+	MaxAurasPossible                       RankItemDescription = 224
+	Slow                                   RankItemDescription = 225
+	JealousyDuration                       RankItemDescription = 226
+	ArgusSpeed                             RankItemDescription = 227
+	ViperShots                             RankItemDescription = 228
+	StunDurationAxe                        RankItemDescription = 229
+	Healing                                RankItemDescription = 230
+	DanceMoveSpeed                         RankItemDescription = 231
+	WarriorsWillBoost                      RankItemDescription = 232
+	ColossalDurationIncrease               RankItemDescription = 233
+	ProtectionsStolen                      RankItemDescription = 234
+	DruidHeal                              RankItemDescription = 235
+	FirstandSecondCooldownDecreasePerTick  RankItemDescription = 236
+	RangedDamage                           RankItemDescription = 237
+	TidalMeter                             RankItemDescription = 238
+	TwoPoisons                             RankItemDescription = 239
+	BoostedProtectionsStolen               RankItemDescription = 240
+	ProtectionsBonus                       RankItemDescription = 241
+	DamageperDart                          RankItemDescription = 242
+	ArgusHealth                            RankItemDescription = 243
+	HysteriaPerHit                         RankItemDescription = 244
+	Healperdrink                           RankItemDescription = 245
+	DamageCenter                           RankItemDescription = 246
+	MarkDuration                           RankItemDescription = 247
+	PhysicalPowerIncrease                  RankItemDescription = 248
+	FullChargeDamage                       RankItemDescription = 249
+	SlowDebuff                             RankItemDescription = 250
+	PoisonDamage                           RankItemDescription = 251
+	Duration                               RankItemDescription = 252
+	AttackSpeedIncrease                    RankItemDescription = 253
+	DamageHealingperHeart                  RankItemDescription = 254
+	DamageperSpear                         RankItemDescription = 255
+	PercentofDamageTaken                   RankItemDescription = 256
+	Cooldownreduction                      RankItemDescription = 257
+	DamageperBlast                         RankItemDescription = 258
+	ProtectionDebuff                       RankItemDescription = 259
+	WeaveHeal                              RankItemDescription = 260
+	DruidSlow                              RankItemDescription = 261
+	SummonRange                            RankItemDescription = 262
+	PoisonDuration                         RankItemDescription = 263
+	AttackProgressionBonus                 RankItemDescription = 264
+	StackAuraDuration                      RankItemDescription = 265
+	DamageIncreaseperCharge                RankItemDescription = 266
+	DamageBuff                             RankItemDescription = 267
+	AssaultDamage                          RankItemDescription = 268
+	ManaRegenperHeart                      RankItemDescription = 269
+	MaxDamage                              RankItemDescription = 270
+	Goal1                                  RankItemDescription = 271
+	BerserkThreshold                       RankItemDescription = 272
+	SickleSlowIncrease                     RankItemDescription = 273
+	Protections                            RankItemDescription = 274
+	HealingReduction                       RankItemDescription = 275
+	ProtectionsStolenPerStack              RankItemDescription = 276
+	MadnessDuration                        RankItemDescription = 277
+	WebRadius                              RankItemDescription = 278
+	AssaultStance                          RankItemDescription = 279
+	DamagePerAcorn                         RankItemDescription = 280
+	BonusProtections                       RankItemDescription = 281
+	DruidDamagePerHit                      RankItemDescription = 282
+	DarkMagicalPower                       RankItemDescription = 283
+	TauntDurationperHit                    RankItemDescription = 284
+	PhysicalPower                          RankItemDescription = 285
+	MagicalProtectionDebuff                RankItemDescription = 286
+	HealingPerConsumedStack                RankItemDescription = 287
+	CooldownReductionGods                  RankItemDescription = 288
+	HealingperTick                         RankItemDescription = 289
+	AmplifiedSpeed                         RankItemDescription = 290
+	WallPortalDuration                     RankItemDescription = 291
+	AlliedMitigation                       RankItemDescription = 292
+	LightSelfHeal                          RankItemDescription = 293
+	PhysicalDamageReduction                RankItemDescription = 294
+	Arcane                                 RankItemDescription = 295
+	BearStunDuration                       RankItemDescription = 296
+	MinionExplode                          RankItemDescription = 297
+	MovementSpeed                          RankItemDescription = 298
+	DruidPowerDebuff                       RankItemDescription = 299
+	Ammo                                   RankItemDescription = 300
+	PowerGain                              RankItemDescription = 301
+	DamageperCorpse                        RankItemDescription = 302
+	WoundDuration                          RankItemDescription = 303
+	InitialDamage                          RankItemDescription = 304
+	ProtectionsBuff                        RankItemDescription = 305
+	PhaseSlow                              RankItemDescription = 306
+	BoostedSlow                            RankItemDescription = 307
+	ProtectionsDuration                    RankItemDescription = 308
+	Power                                  RankItemDescription = 309
+	DetonationDuration                     RankItemDescription = 310
+	DamageEscalation                       RankItemDescription = 311
+	PhysicalPowerperStack                  RankItemDescription = 312
+	Stun                                   RankItemDescription = 313
+	TigerStun                              RankItemDescription = 314
+	Increaseddamagetaken                   RankItemDescription = 315
+	SummerHeat                             RankItemDescription = 316
+	TurtleDamage                           RankItemDescription = 317
+	FistDamage                             RankItemDescription = 318
+	FlyingMinionDamage                     RankItemDescription = 319
+	BonusPhysicalPower                     RankItemDescription = 320
+	ChainSlow                              RankItemDescription = 321
+	DashDamage                             RankItemDescription = 322
+	LaneMinionDamage                       RankItemDescription = 323
+	HealingDebuffDuration                  RankItemDescription = 324
+	RangedBonusDamage                      RankItemDescription = 325
+	StunDuration                           RankItemDescription = 326
+	OtherSourceDamage                      RankItemDescription = 327
+	EssenceDrinkerBuff                     RankItemDescription = 328
+	BonusDamageperStack                    RankItemDescription = 329
+	BlockReflect                           RankItemDescription = 330
+	HP5                                    RankItemDescription = 331
+	MovementSpeedPerStack                  RankItemDescription = 332
+	SelfDamageMitigation                   RankItemDescription = 333
+	Silence                                RankItemDescription = 334
+	ArgusLifetime                          RankItemDescription = 335
+	DropchanceforArrowPickup               RankItemDescription = 336
+	Durationonhit                          RankItemDescription = 337
+	BasicAttackRangeIncrease               RankItemDescription = 338
+	ShatterDamage                          RankItemDescription = 339
+	PhysicalProtectionReducedPerStack      RankItemDescription = 340
+	MirrorDamage                           RankItemDescription = 341
+	Damagewithin55                         RankItemDescription = 342
+	CatProtections                         RankItemDescription = 343
+	TaoluAssaultBoost                      RankItemDescription = 344
+	Shield                                 RankItemDescription = 345
+	CarryDuration                          RankItemDescription = 346
+	GlyphsSpawned                          RankItemDescription = 347
+	PhysicalDamage                         RankItemDescription = 348
+	GodDamageperTick                       RankItemDescription = 349
+	LightningDamage                        RankItemDescription = 350
+	IncreasedHealingperStack               RankItemDescription = 351
+	SpeedBuffperTargetShackled             RankItemDescription = 352
+	Attackspeedconversion                  RankItemDescription = 353
+	ArgusFirstHit                          RankItemDescription = 354
+	BleedDuration                          RankItemDescription = 355
+	BleedDamage                            RankItemDescription = 356
+	HealperMinion                          RankItemDescription = 357
+	Range                                  RankItemDescription = 358
+	MarkLifetime                           RankItemDescription = 359
+	LightHealperTick                       RankItemDescription = 360
+	MissingHealthHeal                      RankItemDescription = 361
+	DisorientDuration                      RankItemDescription = 362
+	AttackRange                            RankItemDescription = 363
+	MitigationLost                         RankItemDescription = 364
+	CCImmunityDuration                     RankItemDescription = 365
+	Bounces                                RankItemDescription = 366
+	DamagePerTick                          RankItemDescription = 367
+	BenevolenceAura                        RankItemDescription = 368
+	DamageAxe                              RankItemDescription = 369
+	PullDamageperTick                      RankItemDescription = 370
+	DamageTakenIncrease                    RankItemDescription = 371
+	StaticDamage                           RankItemDescription = 372
+	CCReduction                            RankItemDescription = 373
+	AutumnDecay                            RankItemDescription = 374
+	MagicalScaling                         RankItemDescription = 375
+	GroundSpeed                            RankItemDescription = 376
+	BasicAttackDamage                      RankItemDescription = 377
+	SlowperStack                           RankItemDescription = 378
+	MovementSpeedSlow                      RankItemDescription = 379
+	DarkProtectionsDebuff                  RankItemDescription = 380
+	AttackSpeedBow                         RankItemDescription = 381
+	CritChance                             RankItemDescription = 382
+	MaxHalos                               RankItemDescription = 383
+	RetrievalCooldownReduction             RankItemDescription = 384
+	Charges                                RankItemDescription = 385
+	SlowPercentage                         RankItemDescription = 386
+	AttackSpeed                            RankItemDescription = 387
+	DamageOnHit                            RankItemDescription = 388
+	HealperHeart                           RankItemDescription = 389
+	ValorAura                              RankItemDescription = 390
+	Rank5                                  RankItemDescription = 391
+	GustDamage                             RankItemDescription = 392
+	TrueDamage                             RankItemDescription = 393
+	HPRestoreGods                          RankItemDescription = 394
+	CrippleDuration                        RankItemDescription = 395
+	Root                                   RankItemDescription = 396
+	CavalryChargeBoost                     RankItemDescription = 397
+	DarkDamage                             RankItemDescription = 398
+	MaximumStacks                          RankItemDescription = 399
+	CCRperStack                            RankItemDescription = 400
+	MovementSpeedBuff                      RankItemDescription = 401
+	HealonAssist                           RankItemDescription = 402
+	DamageperWraith                        RankItemDescription = 403
+	KillHPThreshold                        RankItemDescription = 404
+	BonusSpeedLowHealth                    RankItemDescription = 405
+	SoldiersHealth                         RankItemDescription = 406
+	Disarm                                 RankItemDescription = 407
+	KappaHealth                            RankItemDescription = 408
+	LightMovementSpeed                     RankItemDescription = 409
+	Broodlings                             RankItemDescription = 410
+	BonusDamage                            RankItemDescription = 411
+	Hitstodestroy                          RankItemDescription = 412
+	AreaDamage                             RankItemDescription = 413
+	DetonatedHealing                       RankItemDescription = 414
+	DamageBow                              RankItemDescription = 415
+	ProtectionBuff                         RankItemDescription = 416
+	BounceDamageperTick                    RankItemDescription = 417
+	BearSelfBuff                           RankItemDescription = 418
+	Damagebeyond55                         RankItemDescription = 419
+	ProtectionShred                        RankItemDescription = 420
+	ShadowCloneSpeed                       RankItemDescription = 421
+	DetonateDamage                         RankItemDescription = 422
+	DoTDamage                              RankItemDescription = 423
+	IntoxicationDebuffDuration             RankItemDescription = 424
+	Radius                                 RankItemDescription = 425
+	DamagePerStrike                        RankItemDescription = 426
+	Rank3                                  RankItemDescription = 427
+	EmergeCrashDamage                      RankItemDescription = 428
+	DamagePerBlade                         RankItemDescription = 429
+	DruidDamage                            RankItemDescription = 430
+	MinionStun                             RankItemDescription = 431
+	Mesmerize                              RankItemDescription = 432
+	FireDamageperTick                      RankItemDescription = 433
+	WeakeningAura                          RankItemDescription = 434
+	BonusHealth                            RankItemDescription = 435
+	SlamDamageIncrease                     RankItemDescription = 436
+	OrbDamage                              RankItemDescription = 437
+	HealoverTime                           RankItemDescription = 438
+	BasicAttacks                           RankItemDescription = 439
+	MovementSpeedIncrease                  RankItemDescription = 440
+	BearSlow                               RankItemDescription = 441
+	PassivePhysicalPower                   RankItemDescription = 442
+	BoostedHealing                         RankItemDescription = 443
+	ProtectionReduction                    RankItemDescription = 444
+	ProtectionDuration                     RankItemDescription = 445
+	KillsforOneStack                       RankItemDescription = 446
+	FinalDamage                            RankItemDescription = 447
+	KnockupTime                            RankItemDescription = 448
+	SlamDamage                             RankItemDescription = 449
+	MinionDamage                           RankItemDescription = 450
+	TeleportRange                          RankItemDescription = 451
+	DashRange                              RankItemDescription = 452
+	DebuffDuration                         RankItemDescription = 453
+	PolymorphDuration                      RankItemDescription = 454
+	MaxChargeDmgHealScale                  RankItemDescription = 455
+	Arcs                                   RankItemDescription = 456
+	HealthRegeneration                     RankItemDescription = 457
+	ShieldDuration                         RankItemDescription = 458
+	WebLifetime                            RankItemDescription = 459
+	ShadowSlow                             RankItemDescription = 460
+	HealingReductionLifetime               RankItemDescription = 461
+	LightDamage                            RankItemDescription = 462
+	SlowDuration                           RankItemDescription = 463
+	SubmergeSlow                           RankItemDescription = 464
+	HealPerTick                            RankItemDescription = 465
+	AbilityLifesteal                       RankItemDescription = 466
+	ConvictionBoost                        RankItemDescription = 467
+	LightDuration                          RankItemDescription = 468
+	SlowAmount                             RankItemDescription = 469
+	Powerperstack                          RankItemDescription = 470
+	ThunderDamage                          RankItemDescription = 471
+	CatHealth                              RankItemDescription = 472
+	CooldownReduction                      RankItemDescription = 473
+	HP5Stack                               RankItemDescription = 474
+	BonusDamageGods                        RankItemDescription = 475
+	SoulHealth                             RankItemDescription = 476
+	GodBonusDamage                         RankItemDescription = 477
+	DefenseStance                          RankItemDescription = 478
+	Damage                                 RankItemDescription = 479
+	BearDamage                             RankItemDescription = 480
+	Slowduration                           RankItemDescription = 481
+	MaximumMitigation                      RankItemDescription = 482
+	BearDamagePerSwipe                     RankItemDescription = 483
+	BroodlingDamage                        RankItemDescription = 484
+	DamagefirstHit                         RankItemDescription = 485
+	CrowdControlReduction                  RankItemDescription = 486
+	HealthBonus                            RankItemDescription = 487
+	GustSlow                               RankItemDescription = 488
+	JealousyDamageIncrease                 RankItemDescription = 489
+	SubmergeManaRegen                      RankItemDescription = 490
+	AdditionalDamage                       RankItemDescription = 491
+	DragonBreathDamage                     RankItemDescription = 492
+	SecondaryDamage                        RankItemDescription = 493
+	DetonateLifetime                       RankItemDescription = 494
+	RiftDuration                           RankItemDescription = 495
+	NumberConjured                         RankItemDescription = 496
+	EmpoweredBuff                          RankItemDescription = 497
+	ShackleBonus                           RankItemDescription = 498
+	Penetration                            RankItemDescription = 499
+	PullDuration                           RankItemDescription = 500
+)
+
 // RankItemPart - parsed data regarding a specific part of an ability
 type RankItemPart struct {
-	Description string
+	Description RankItemDescription
 	Value       string
 }
 
 // ItemDescription - parsed data regarding a specific item (ability, basic attack, etc.)
 type ItemDescription struct {
-	Cooldown             int
-	Cost                 []int
+	Cooldown             []float32
+	Cost                 []float32
 	Description          string
 	Menuitems            []MenuItemPart
 	Rankitems            []RankItemPart
@@ -1670,6 +1782,163 @@ type Ability struct {
 	Summary     string
 	URL         string
 }
+
+func stringNumbersToFloatSlice(s string) []float32 {
+	r, _ := regexp.Compile(`[^\d]`)
+	s = r.ReplaceAllString(s, " ")
+	r, _ = regexp.Compile(`(\b\d.\b)`)
+	rets := r.FindAllString(s, -1)
+	ret := make([]float32, len(rets))
+	for i, str := range rets {
+		val, _ := strconv.ParseFloat(str, 32)
+		ret[i] = float32(val)
+	}
+	return ret
+}
+
+func rawAbilityToItemDescription(rd rawDescription) ItemDescription {
+	var i ItemDescription
+	i.Cooldown = stringNumbersToFloatSlice(rd.ItemDescription.Cooldown)
+	i.Cost = stringNumbersToFloatSlice(rd.ItemDescription.Cost)
+	i.Description = rd.ItemDescription.Description
+
+	i.Menuitems = make([]MenuItemPart, len(rd.ItemDescription.Menuitems))
+	for index, item := range rd.ItemDescription.Menuitems {
+		i.Menuitems[index] = rawItemPartToMenuItemPart(item)
+	}
+
+	i.Rankitems = make([]RankItemPart, len(rd.ItemDescription.Rankitems))
+	for index, item := range rd.ItemDescription.Rankitems {
+		i.Rankitems[index] = rawItemPartToRankItemPart(item)
+	}
+
+	i.SecondaryDescription = rd.ItemDescription.SecondaryDescription
+	return i
+}
+
+func rawAbilitiesToAbilities(ra rawGod) []Ability {
+	as := make([]Ability, 4)
+
+	as[0].AbilityName = ra.AbilityName1
+	as[0].ID = ra.AbilityID1
+	as[0].Description = rawAbilityToItemDescription(ra.AbilityDescription1.Description)
+	as[0].Summary = ra.AbilityDescription1.Summary
+	as[0].URL = ra.GodAbility1URL
+
+	as[1].AbilityName = ra.AbilityName2
+	as[1].ID = ra.AbilityID2
+	as[1].Description = rawAbilityToItemDescription(ra.AbilityDescription2.Description)
+	as[1].Summary = ra.AbilityDescription2.Summary
+	as[1].URL = ra.GodAbility2URL
+
+	as[2].AbilityName = ra.AbilityName3
+	as[2].ID = ra.AbilityID3
+	as[2].Description = rawAbilityToItemDescription(ra.AbilityDescription3.Description)
+	as[2].Summary = ra.AbilityDescription3.Summary
+	as[2].URL = ra.GodAbility3URL
+
+	as[3].AbilityName = ra.AbilityName4
+	as[3].ID = ra.AbilityID4
+	as[3].Description = rawAbilityToItemDescription(ra.AbilityDescription4.Description)
+	as[3].Summary = ra.AbilityDescription4.Summary
+	as[3].URL = ra.GodAbility4URL
+
+	return as
+}
+
+func rawBasicAttackToAbility(ra rawAbility) (a Ability) {
+	a.AbilityName = "Basic Attack"
+	a.Description = rawAbilityToItemDescription(ra.Description)
+	a.ID = ra.ID
+	a.Summary = ra.Summary
+	a.URL = ra.URL
+	return a
+}
+
+func stringPantheonToPantheon(s string) Pantheon {
+	switch s {
+	case "Hindu":
+		return Hindu
+	case "Mayan":
+		return Mayan
+	case "Chinese":
+		return Chinese
+	case "Celtic":
+		return Celtic
+	case "Roman":
+		return Roman
+	case "Slavic":
+		return Slavic
+	case "Greek":
+		return Greek
+	case "Japanese":
+		return Japanese
+	case "Egyptian":
+		return Egyptian
+	case "Voodoo":
+		return Voodoo
+	case "Norse":
+		return Norse
+	case "Arthurian":
+		return Arthurian
+	case "Polynesian":
+		return Polynesian
+	default:
+		return NoPantheon
+	}
+}
+
+// Role - role of god represented by int
+type Role int
+
+// All of the roles of Smite gods
+const (
+	NoRole   Role = -1
+	Assassin Role = 0
+	Hunter   Role = 1
+	Mage     Role = 2
+	Warrior  Role = 3
+	Guardian Role = 4
+)
+
+// stringRoleToRole - converts role string to Role
+func stringRoleToRole(s string) Role {
+	switch s {
+	case "Assassin":
+		return Assassin
+	case "Hunter":
+		return Hunter
+	case "Mage":
+		return Mage
+	case "Warrior":
+		return Warrior
+	case "Guardian":
+		return Guardian
+	default:
+		return NoRole
+	}
+}
+
+// Pantheon - god's pantheon represented as an int
+type Pantheon int
+
+// All pantheons in SMITE
+const (
+	NoPantheon Pantheon = -1
+	Japanese   Pantheon = 0
+	Roman      Pantheon = 1
+	Voodoo     Pantheon = 2
+	Slavic     Pantheon = 3
+	Arthurian  Pantheon = 4
+	Polynesian Pantheon = 5
+	Norse      Pantheon = 6
+	Greek      Pantheon = 7
+	Hindu      Pantheon = 8
+	Mayan      Pantheon = 9
+	Egyptian   Pantheon = 10
+	Chinese    Pantheon = 11
+	Celtic     Pantheon = 12
+)
 
 // God - Holds data pertaining to parsed god
 type God struct {
@@ -1693,14 +1962,14 @@ type God struct {
 	ManaPerFive                float64
 	ManaPerLevel               int
 	Name                       string
-	OnFreeRotation             string
-	Pantheon                   string
+	OnFreeRotation             bool
+	Pantheon                   Pantheon
 	PhysicalPower              int
 	PhysicalPowerPerLevel      int
 	PhysicalProtection         int
 	PhysicalProtectionPerLevel int
 	Pros                       string
-	Roles                      string
+	Role                       Role
 	Speed                      int
 	Title                      string
 	Type                       string
@@ -1714,109 +1983,66 @@ type God struct {
 	ID int
 	// Misc data
 	LatestGod bool
-	RetMsg    string
 }
 
-// rawItemPart - unparsed data regarding a specific part of an ability
-type rawItemPart struct {
-	Description string `json:"description"`
-	Value       string `json:"value"`
+// rawGodToGod - converts a rawGod to a God
+func rawGodToGod(rg rawGod) God {
+	var g God
+	g.Abilities = rawAbilitiesToAbilities(rg)
+	g.AttackSpeed = rg.AttackSpeed
+	g.AttackSpeedPerLevel = rg.AttackSpeedPerLevel
+	g.Cons = rg.Cons
+	g.HP5PerLevel = rg.HP5PerLevel
+	g.Health = rg.Health
+	g.HealthPerFive = rg.HealthPerFive
+	g.HealthPerLevel = rg.Health
+	g.Lore = rg.Lore
+	g.MP5PerLevel = rg.MP5PerLevel
+	g.MagicProtection = rg.MagicProtection
+	g.MagicProtectionPerLevel = rg.MagicProtectionPerLevel
+	g.MagicalPower = rg.MagicalPower
+	g.MagicalPowerPerLevel = rg.MagicalPowerPerLevel
+	g.Mana = rg.Mana
+	g.ManaPerFive = rg.ManaPerFive
+	g.ManaPerLevel = rg.ManaPerLevel
+	g.Name = rg.Name
+	g.OnFreeRotation = G.CommonStringToBool(rg.OnFreeRotation)
+	g.Pantheon = stringPantheonToPantheon(rg.Pantheon)
+	g.PhysicalPower = rg.PhysicalPower
+	g.PhysicalPowerPerLevel = rg.PhysicalPowerPerLevel
+	g.PhysicalProtection = rg.PhysicalProtection
+	g.PhysicalProtectionPerLevel = rg.PhysicalProtectionPerLevel
+	g.Pros = rg.Pros
+	g.Role = stringRoleToRole(rg.Roles)
+	g.Speed = rg.Speed
+	g.Title = rg.Title
+	g.Type = rg.Type
+	g.BasicAttack = rawBasicAttackToAbility(rg.BasicAttack)
+	g.GodAbilityURLs = []string{rg.GodAbility1URL, rg.GodAbility2URL, rg.GodAbility3URL, rg.GodAbility4URL, rg.GodAbility5URL}
+	g.GodCardURL = rg.GodCardURL
+	g.GodIconURL = rg.GodIconURL
+	g.LatestGod = G.CommonStringToBool(rg.LatestGod)
+	return g
 }
 
-// rawItemDescription - unparsed data regarding a specific item (ability, basic attack, etc.)
-type rawItemDescription struct {
-	Cooldown             string        `json:"cooldown"`
-	Cost                 string        `json:"cost"`
-	Description          string        `json:"description"`
-	Menuitems            []rawItemPart `json:"menuitems"`
-	Rankitems            []rawItemPart `json:"rankitems"`
-	SecondaryDescription string        `json:"secondaryDescription"`
+// allRawGodsToGodSlice - converts slice of rawGod to slice of God
+func allRawGodsToGodSlice(rgs *[]rawGod) *[]God {
+	gs := make([]God, len(*rgs))
+	for g, rg := range *rgs {
+		gs[g] = rawGodToGod(rg)
+	}
+	return &gs
 }
 
-// rawDescription - unparsed data regarding wrapping a rawItemDescription
-type rawDescription struct {
-	ItemDescription rawItemDescription `json:"itemDescription"`
-}
-
-// rawAbility - unparsed data regarding an ability
-type rawAbility struct {
-	Description rawDescription `json:"Description"`
-	ID          int            `json:"Id"`
-	Summary     string         `json:"Summary"`
-	URL         string         `json:"URL"`
-}
-
-// rawGod - Holds data pertaining to unparsed god, intermediate format
-type rawGod struct {
-	// Ability names
-	AbilityName1 string `json:"Ability1"`
-	AbilityName2 string `json:"Ability2"`
-	AbilityName3 string `json:"Ability3"`
-	AbilityName4 string `json:"Ability4"`
-	AbilityName5 string `json:"Ability5"`
-	// Ability ids
-	AbilityID1 int `json:"AbilityId1"`
-	AbilityID2 int `json:"AbilityId2"`
-	AbilityID3 int `json:"AbilityId3"`
-	AbilityID4 int `json:"AbilityId4"`
-	AbilityID5 int `json:"AbilityId5"`
-	// Ability structs
-	AbilityDesciption1 rawAbility `json:"Ability_1"`
-	AbilityDesciption2 rawAbility `json:"Ability_2"`
-	AbilityDesciption3 rawAbility `json:"Ability_3"`
-	AbilityDesciption4 rawAbility `json:"Ability_4"`
-	AbilityDesciption5 rawAbility `json:"Ability_5"`
-	// God stats
-	AttackSpeed                float64 `json:"AttackSpeed"`
-	AttackSpeedPerLevel        float64 `json:"AttackSpeedPerLevel"`
-	Cons                       string  `json:"Cons"`
-	HP5PerLevel                float64 `json:"HP5PerLevel"`
-	Health                     int     `json:"Health"`
-	HealthPerFive              int     `json:"HealthPerFive"`
-	HealthPerLevel             int     `json:"HealthPerLevel"`
-	Lore                       string  `json:"Lore"`
-	MP5PerLevel                float64 `json:"MP5PerLevel"`
-	MagicProtection            int     `json:"MagicProtection"`
-	MagicProtectionPerLevel    float64 `json:"MagicProtectionPerLevel"`
-	MagicalPower               int     `json:"MagicalPower"`
-	MagicalPowerPerLevel       int     `json:"MagicalPowerPerLevel"`
-	Mana                       int     `json:"Mana"`
-	ManaPerFive                float64 `json:"ManaPerFive"`
-	ManaPerLevel               int     `json:"ManaPerLevel"`
-	Name                       string  `json:"Name"`
-	OnFreeRotation             string  `json:"OnFreeRotation"`
-	Pantheon                   string  `json:"Pantheon"`
-	PhysicalPower              int     `json:"PhysicalPower"`
-	PhysicalPowerPerLevel      int     `json:"PhysicalPowerPerLevel"`
-	PhysicalProtection         int     `json:"PhysicalProtection"`
-	PhysicalProtectionPerLevel int     `json:"PhysicalProtectionPerLevel"`
-	Pros                       string  `json:"Pros"`
-	Roles                      string  `json:"Roles"`
-	Speed                      int     `json:"Speed"`
-	Title                      string  `json:"Title"`
-	Type                       string  `json:"Type"`
-	// Omitted abilityDescription* fields because they seemed to be duplicates of previous ability fields
-	// God basic attack
-	BasicAttack rawAbility `json:"basicAttack"`
-	// God image urls
-	GodAbility1URL string `json:"godAbility1_URL"`
-	GodAbility2URL string `json:"godAbility2_URL"`
-	GodAbility3URL string `json:"godAbility3_URL"`
-	GodAbility4URL string `json:"godAbility4_URL"`
-	GodAbility5URL string `json:"godAbility5_URL"`
-	GodCardURL     string `json:"godCard_URL"`
-	GodIconURL     string `json:"godIcon_URL"`
-	// God id
-	ID int `json:"id"`
-	// Misc data
-	LatestGod string `json:"latestGod"`
-	RetMsg    string `json:"ret_msg"`
-}
-
-func GetRawGods() *[]rawGod {
+func getRawGods() *[]rawGod {
 	file, e := ioutil.ReadFile(G.GodsPath)
 	G.ErrorHandler(e)
 	rgs := make([]rawGod, 0)
 	json.Unmarshal(file, &rgs)
 	return &rgs
+}
+
+// GetGods - gets all parsed gods
+func GetGods() *[]God {
+	return allRawGodsToGodSlice(getRawGods())
 }

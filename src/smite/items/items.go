@@ -8,14 +8,6 @@ import (
 	"strconv"
 )
 
-// aflagStringToBool - convert aflag to bool value
-func aflagStringToBool(s string) bool {
-	if s == "y" {
-		return true
-	}
-	return false
-}
-
 // MenuItemDescription - menu item description represented as int
 type MenuItemDescription int
 
@@ -215,14 +207,14 @@ const (
 	NoType     Type = -1
 	Active     Type = 0
 	Consumable Type = 1
-	Item       Type = 2
+	ItemType   Type = 2
 )
 
 // typeTextToType - converts type text to Type
 func typeTextToType(s string) Type {
 	switch s {
 	case "Item":
-		return Item
+		return ItemType
 	case "Consumable":
 		return Consumable
 	case "Active":
@@ -232,8 +224,8 @@ func typeTextToType(s string) Type {
 	}
 }
 
-// item - Holds data pertaining to parsed item
-type item struct {
+// Item - Holds data pertaining to parsed item
+type Item struct {
 	ActiveFlag      bool
 	ChildItemID     int
 	DeviceName      string
@@ -284,9 +276,9 @@ type rawItem struct {
 }
 
 // rawItemToItem - converts a rawItem to an item
-func rawItemToItem(ri rawItem) item {
-	var i item
-	i.ActiveFlag = aflagStringToBool(ri.ActiveFlag)
+func rawItemToItem(ri rawItem) Item {
+	var i Item
+	i.ActiveFlag = G.CommonStringToBool(ri.ActiveFlag)
 	i.ChildItemID = ri.ChildItemID
 	i.DeviceName = ri.DeviceName
 	i.IconID = ri.IconID
@@ -305,8 +297,8 @@ func rawItemToItem(ri rawItem) item {
 }
 
 // allRawItemsToItemSlice - converts slice of rawItem to slice of item
-func allRawItemsToItemSlice(ris *[]rawItem) *[]item {
-	is := make([]item, len(*ris))
+func allRawItemsToItemSlice(ris *[]rawItem) *[]Item {
+	is := make([]Item, len(*ris))
 	for i, ri := range *ris {
 		is[i] = rawItemToItem(ri)
 	}
@@ -319,4 +311,9 @@ func getRawItems() *[]rawItem {
 	ris := make([]rawItem, 0)
 	json.Unmarshal(file, &ris)
 	return &ris
+}
+
+// GetItems - Gets all parsed items
+func GetItems() *[]Item {
+	return allRawItemsToItemSlice(getRawItems())
 }
